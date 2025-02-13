@@ -85,7 +85,10 @@ const createDropFileLink = (event: DragEvent) => {
 
 const editor = useEditor({
   content: props.content,
-  onDrop: (event) => {
+  onDrop: (event, slice, moved) => {
+    if (slice.content.childCount || moved) {
+      return
+    }
     createDropFileLink(event)
   },
   onUpdate({ editor }) {

@@ -224,6 +224,7 @@ onMounted(() => {
 .image-wrapper {
   position: relative;
   overflow: hidden;
+  max-width: 450px;
 
   &.image {
     width: 100%;

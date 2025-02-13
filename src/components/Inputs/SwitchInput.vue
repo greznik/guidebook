@@ -42,7 +42,7 @@ defineProps<{}>()
   height: 24px;
   border-radius: 25%/50%;
   vertical-align: top;
-  background: $switchBg;
+  background: $hoverGrey;
   transition: 0.2s;
 }
 .switcher .switcher-switch:before {

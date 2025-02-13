@@ -52,7 +52,8 @@ storeToken(useCookie('token'))
   background: $bgWhite;
   color: $textPrimary;
   font-family: 'Inter';
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .Toastify__toast-body {
