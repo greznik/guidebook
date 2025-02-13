@@ -54,14 +54,11 @@ const createDropFileLink = (event: DragEvent) => {
             const url = result?.body?.url
             if (typeof url === 'string') {
               if (validImageTypes.includes(fileType)) {
-                editor.value
-                  ?.chain()
-                  .focus()
-                  .insertContentAt(position.pos, {
-                    type: 'imageUpload',
-                    attrs: { src: url, alt: '', caption: '' },
-                  })
-                  .run()
+                editor.value?.commands.setImage({
+                  src: url,
+                  alt: '',
+                  title: '',
+                })
               } else {
                 editor.value
                   ?.chain()
@@ -99,7 +96,11 @@ const editor = useEditor({
     Color,
     TextStyle,
     Link,
-    Image.configure({}),
+    Image.configure({
+      HTMLAttributes: {
+        class: 'editor-image',
+      },
+    }),
     ImageUpload,
     FileUpload,
     CardUpload,
@@ -306,7 +307,16 @@ onMounted(() => {
   pointer-events: none;
 }
 
+.editor-image {
+  transition: box-shadow 0.2s ease;
+}
+
 .ProseMirror-selectednode .image-wrapper__image {
+  box-shadow: 0px 0px 20px 0px #0101011a;
+  box-shadow: 0px 8px 12px 0px #01010133;
+}
+
+.ProseMirror-selectednode.editor-image {
   box-shadow: 0px 0px 20px 0px #0101011a;
   box-shadow: 0px 8px 12px 0px #01010133;
 }
