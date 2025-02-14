@@ -40,7 +40,4 @@ watch(
   font-size: 18px;
   overflow-y: auto;
 }
-.editor-container {
-  max-width: 768px;
-}
 </style>

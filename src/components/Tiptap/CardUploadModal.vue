@@ -229,6 +229,7 @@ onMounted(() => {
   &.image {
     width: 100%;
     height: auto;
+    margin-bottom: 24px;
     object-fit: cover;
     border: none;
   }

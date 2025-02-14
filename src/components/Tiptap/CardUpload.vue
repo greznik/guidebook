@@ -187,7 +187,7 @@ onMounted(() => {
       >
         <div
           class="card__header"
-          v-if="getDecodeToken?.role === 0"
+          v-if="getDecodeToken?.role === 0 || getDecodeToken?.role === 1"
         >
           <button
             class="card__header-button"

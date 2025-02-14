@@ -21,16 +21,8 @@ interface SuggestionProps {
 
 const items: SuggestionItem[] = [
   {
-    name: 'Текст',
-    description: 'Просто начните писать текст.',
-    icon: 'mdi:text',
-    command: ({ editor, range }) => {
-      editor.chain().focus().deleteRange(range).setParagraph().run()
-    },
-  },
-  {
     name: 'Заголовок',
-    description: 'Большой заголовок.',
+    description: 'Большой заголовок',
     icon: 'mdi:format-header-2',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).setNode('heading', { level: 2 }).run()
@@ -38,7 +30,7 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Список',
-    description: 'Создайте простой список.',
+    description: 'Создай простой список',
     icon: 'mdi:format-list-bulleted',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).toggleBulletList().run()
@@ -46,7 +38,7 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Числовой список',
-    description: 'Создайте числовой список.',
+    description: 'Создай числовой список',
     icon: 'mdi:format-list-numbered',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).toggleOrderedList().run()
@@ -54,7 +46,7 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Цитата',
-    description: 'Оберните в цитату.',
+    description: 'Оберни в цитату',
     icon: 'mdi:format-quote-close',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).toggleBlockquote().run()
@@ -62,7 +54,7 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Картинка',
-    description: 'Загрузите картинку.',
+    description: 'Загрузи картинку',
     icon: 'mdi:image',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).insertContent('<image-upload></image-upload>').run()
@@ -73,7 +65,7 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Карточка',
-    description: 'Загрузите карточку.',
+    description: 'Загрузи карточку',
     icon: 'mdi:file',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).insertContent('<card-upload></card-upload>').run()
@@ -84,7 +76,7 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Разделитель',
-    description: 'Вставьте горизонтальный разделитель.',
+    description: 'Вставь горизонтальный разделитель',
     icon: 'mdi:minus',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).setHorizontalRule().run()

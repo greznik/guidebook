@@ -62,7 +62,7 @@ const handleFileUpload = (event: Event) => {
 
       if (typeof url === 'string') {
         props.updateAttributes({
-          src: result,
+          src: url,
           alt: file.name,
         })
         altText.value = file.name
@@ -129,6 +129,7 @@ onMounted(() => {
     />
     <ButtonComponent
       outline
+      class="image-upload__button"
       @click="triggerFileInput"
       v-if="!node.attrs.src"
       >Нажмите, чтобы выбрать картинку</ButtonComponent
@@ -150,30 +151,14 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .image-upload {
-  max-width: 100%;
-  width: 100%;
+  width: fit-content;
 
   &__input {
     display: none;
   }
 
   &__button {
-    background-color: $greyNeutral;
-    color: #1f2937;
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 4rem;
-    transition: background-color 150ms ease-in-out;
-
-    &:hover {
-      background-color: $bgWhite;
-    }
+    width: auto;
   }
 
   &__icon {

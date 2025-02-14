@@ -97,6 +97,7 @@ const editor = useEditor({
     TextStyle,
     Link,
     Image.configure({
+      inline: true,
       HTMLAttributes: {
         class: 'editor-image',
       },
@@ -105,7 +106,7 @@ const editor = useEditor({
     FileUpload,
     CardUpload,
     Placeholder.configure({
-      placeholder: 'Введите текст или "/" для меню',
+      placeholder: 'Введи текст или "/" для меню',
     }),
 
     Commands.configure({
@@ -119,7 +120,7 @@ const { getDecodeToken } = storeToRefs(useAuthStore())
 watch(
   () => getDecodeToken.value,
   (value) => {
-    editor.value?.setEditable(value?.role === 0)
+    editor.value?.setEditable(value?.role === 0 || value?.role === 1)
   },
 )
 
@@ -135,7 +136,7 @@ watch(
 )
 
 onMounted(() => {
-  editor.value?.setEditable(getDecodeToken.value?.role === 0)
+  editor.value?.setEditable(getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1)
 })
 </script>
 

@@ -13,7 +13,6 @@ const showModal = ref(false)
 const showSearch = ref(false)
 
 const authStore = useAuthStore()
-const { getDecodeToken } = storeToRefs(useAuthStore())
 
 const handleModal = () => {
   showModal.value = !showModal.value
@@ -50,7 +49,6 @@ const logoutUser = () => {
     <slot name="header"></slot>
 
     <HeaderButtons
-      :user="getDecodeToken"
       @logoutUser="logoutUser"
       @handleModal="handleModal"
       @handleSearch="handleSearch"

@@ -2,19 +2,13 @@
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '~/stores/auth'
-import type { IDecodeUser } from '~/types/app.types'
 
 import SmallPopup from '~/components/Modals/SmallPopup.vue'
 import UsersModal from '~/components/Modals/UsersModal.vue'
 import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
-import UserPopupIcon from '~/assets/svg/usersPopup.svg'
 import SignOutIcon from '~/assets/svg/signOutIcon.svg'
 
-defineProps<{
-  user: IDecodeUser
-}>()
-
-const { userToken } = storeToRefs(useAuthStore())
+const { userToken, getDecodeToken } = storeToRefs(useAuthStore())
 const isShowPoppup = ref(false)
 const isShowUsers = ref(false)
 const poppup = ref(null)
@@ -22,11 +16,11 @@ const authButtonRef = ref()
 
 const emit = defineEmits(['handleModal', 'logoutUser', 'handleSearch'])
 
-onClickOutside(poppup, (event) => handlePoppup(), { ignore: [authButtonRef] })
+onClickOutside(poppup, (event) => handlePopup(), { ignore: [authButtonRef] })
 
 const logoutUser = async () => {
   emit('logoutUser')
-  handlePoppup()
+  handlePopup()
   await navigateTo({
     path: '/',
   })
@@ -37,7 +31,7 @@ const handleUsersModal = () => {
   isShowUsers.value = !isShowUsers.value
 }
 
-const handlePoppup = () => {
+const handlePopup = () => {
   isShowPoppup.value = !isShowPoppup.value
 }
 
@@ -59,7 +53,7 @@ const popupButtons = [
 
   <div class="header__buttons">
     <Transition name="fade">
-      <SmallPopup v-if="isShowPoppup">
+      <SmallPopup @handlePopup="handlePopup" v-if="isShowPoppup">
         <button
           v-for="button in popupButtons"
           :key="button.id"
@@ -100,9 +94,9 @@ const popupButtons = [
         ref="authButtonRef"
         isAuth
         user
-        @click="handlePoppup"
+        @click="handlePopup"
       >
-        {{ user?.name }}
+        {{ getDecodeToken?.name }}
         <template #icon>
           <img
             class="header__auth-icon"

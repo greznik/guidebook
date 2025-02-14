@@ -84,7 +84,7 @@ const { value, errorMessage, meta } = useField(() => props.name)
 .textarea {
   border-radius: $smallRadius;
   padding: 10px 20px;
-  font-size: 14px;
+  font-size: 16px;
   font-family: 'Inter';
   background-color: $greyNeutral;
   border: none;

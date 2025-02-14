@@ -14,12 +14,13 @@ const emit = defineEmits(['selectItem'])
 const { getDecodeToken } = storeToRefs(useAuthStore())
 const { createSeed } = useSeedsStore()
 
-defineProps<{
+const props = defineProps<{
   sidebarList: any
 }>()
 
 const seedName = ref('Новый подраздел')
 const isShowPoppupId = ref('')
+const chapterId = ref('')
 const route = useRoute()
 const showChapterModal = ref<boolean>(false)
 const showAccessModal = ref<boolean>(false)
@@ -38,7 +39,6 @@ const showChapterModalHandle = () => {
 
 const accessModalHandle = () => {
   showAccessModal.value = !showAccessModal.value
-  isHandlePopup('')
 }
 
 const addSeedHandle = async (chapterId: string) => {
@@ -63,7 +63,10 @@ const addSeedHandle = async (chapterId: string) => {
   }
 }
 
-const isHandlePopup = (id: string) => {
+const handlePopup = (id: string) => {
+  if (chapterId.value !== id && id) {
+    chapterId.value = id
+  }
   if (id !== isShowPoppupId.value) {
     isShowPoppupId.value = id
   } else {
@@ -78,20 +81,33 @@ const handleDeleteModal = () => {
 const editChapterHandle = (chapter: IChapterItem) => {
   showChapterModalHandle()
   chapterItem.value = chapter
-  isHandlePopup('')
+  handlePopup('')
 }
 
 const selectDeletingItem = (seletedItem: IChapterItem) => {
+  if (props.sidebarList.chapters.length === 1) {
+    useNuxtApp().$toast.error('Нельзя удалить посследний раздел')
+    return
+  }
   deletingItem.value = seletedItem
   handleDeleteModal()
-  isHandlePopup('')
+  handlePopup('')
 }
 
-const popupButtons = [
+const isAdminToken = computed(() => {
+  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
+})
+
+const popupButtons = reactive([
   { id: 0, img: EditPopupIcon, name: 'Редактировать', action: editChapterHandle },
   { id: 1, img: AccessPopupIcon, name: 'Права доступа', action: accessModalHandle },
-  { id: 2, img: DeleteIcon, name: 'Удалить', action: selectDeletingItem },
-]
+  {
+    id: 2,
+    img: DeleteIcon,
+    name: 'Удалить',
+    action: selectDeletingItem,
+  },
+])
 </script>
 
 <template>
@@ -108,6 +124,7 @@ const popupButtons = [
       <AccessRightsModal
         v-if="showAccessModal"
         @handleModal="accessModalHandle"
+        :chapterId="chapterId"
       />
     </Transition>
     <Transition name="fade">
@@ -136,7 +153,10 @@ const popupButtons = [
           class="navigation__list-details"
         >
           <Transition name="fade">
-            <SmallPopup v-if="isShowPoppupId === chapter.id">
+            <SmallPopup
+              @handlePopup="handlePopup('')"
+              v-if="isShowPoppupId === chapter.id"
+            >
               <button
                 v-for="button in popupButtons"
                 :key="button.id"
@@ -160,9 +180,9 @@ const popupButtons = [
             />
             {{ chapter.name }}
             <button
-              v-if="getDecodeToken?.role === 0 && route.name === 'content'"
+              v-if="isAdminToken && route.name === 'content'"
               class="navigation__list-button"
-              @click="isHandlePopup(chapter.id)"
+              @click="handlePopup(chapter.id)"
             >
               <img
                 src="~/assets/svg/horizontalDots.svg"
@@ -179,7 +199,7 @@ const popupButtons = [
             @selectDeletingItem="selectDeletingItem"
           />
           <ButtonComponent
-            v-if="getDecodeToken?.role === 0"
+            v-if="isAdminToken"
             @click="addSeedHandle(chapter.id)"
             hasIcon
             transparent
@@ -192,7 +212,7 @@ const popupButtons = [
     </ul>
 
     <ButtonComponent
-      v-if="getDecodeToken?.role === 0"
+      v-if="isAdminToken"
       class="navigation__button"
       @click="showChapterModalHandle"
       hasIcon

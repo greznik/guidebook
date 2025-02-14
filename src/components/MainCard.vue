@@ -8,15 +8,6 @@ const props = defineProps<{
 }>()
 const { width } = useWindowSize({ initialWidth: 0 })
 
-const handleAction = async (id: string) => {
-  if (id) {
-    emit('openSidebar', id)
-  } else {
-    await navigateTo({
-      path: '/content',
-    })
-  }
-}
 
 const handleCardClick = async () => {
   if (width.value > WIDTH_BREAKPOINT) {
@@ -51,7 +42,7 @@ const getRemainingChapters = computed(() => {
   >
     <ClientOnly>
       <NuxtLink
-        v-if="width > WIDTH_BREAKPOINT && card.chapters?.length"
+        v-if="width > WIDTH_BREAKPOINT"
         :to="{
           path: '/content',
           query: {
@@ -72,7 +63,7 @@ const getRemainingChapters = computed(() => {
       <button
         v-else
         class="card__header"
-        @click="handleAction(card.chapters?.[0]?.id)"
+        @click="emit('openSidebar', card.chapters?.[0]?.id)"
       >
         <h2 class="card__header-title">{{ card.name }}</h2>
         <img

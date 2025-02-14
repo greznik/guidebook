@@ -1,9 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onClickOutside } from '@vueuse/core'
+const emit = defineEmits(['handlePopup'])
+const popupRef = ref()
+onClickOutside(popupRef, (event) => {
+  emit('handlePopup')
+})
+</script>
 
 <template>
   <div
     class="popup"
-    ref="poppup"
+    ref="popupRef"
   >
     <slot></slot>
   </div>

@@ -92,7 +92,6 @@ onUpdated(() => {
       type="text"
       inputOnly
     />
-    <Checkbox v-model="checked">Внешний доступ</Checkbox>
     <div class="chapter-modal__buttons">
       <ButtonComponent
         v-if="chapterItem?.id"

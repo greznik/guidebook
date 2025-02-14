@@ -123,7 +123,7 @@ watch(
             </li>
           </ul>
           <div v-else>
-            <p class="search__field-description">Введите поисковой запрос</p>
+            <p class="search__field-description">Введи поисковой запрос</p>
           </div>
 
           <div

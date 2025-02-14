@@ -31,6 +31,10 @@ const showContentTypeMenu = ref(false)
 const showColorMenu = ref(false)
 const { getDecodeToken } = storeToRefs(useAuthStore())
 
+const isAdminAuth = computed(() => {
+  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
+})
+
 const shouldShow: any = (props: {
   editor: Editor
   view: EditorView
@@ -58,7 +62,7 @@ const shouldShow: any = (props: {
   if (nodeAtSelection && nodeAtSelection.type.name === 'image') {
     return false
   }
-  if (getDecodeToken.value?.role !== 0) {
+  if (!isAdminAuth) {
     return false
   }
 

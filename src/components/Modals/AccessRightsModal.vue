@@ -6,6 +6,10 @@ import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
 import type { IRightsDataGroups } from '~/types/app.types'
 
 const emit = defineEmits(['handleModal'])
+const props = defineProps<{
+  chapterId: string
+}>()
+
 const route = useRoute()
 const rightsStore = useRightsStore()
 const { fetchGuestRights, deleteGuestRights } = useGuestStore()
@@ -14,7 +18,7 @@ const checkedUsers = ref<string[][] | any>([])
 
 const fetchRightsData = async () => {
   try {
-    await rightsStore.getRightsData(route.query.chapter as string)
+    await rightsStore.getRightsData(props.chapterId)
   } catch (e) {
     console.log(e)
   }
@@ -23,14 +27,14 @@ const fetchRightsData = async () => {
 const saveRights = async () => {
   try {
     if (rightsData.value.guest) {
-      await fetchGuestRights(route.query.chapter as string)
+      await fetchGuestRights(props.chapterId)
     } else {
-      await deleteGuestRights(route.query.chapter as string)
+      await deleteGuestRights(props.chapterId)
     }
 
     const checkedIdsArr = checkedUsers.value.join().split(',')
 
-    await rightsStore.patchRightsData(route.query.chapter as string, checkedIdsArr)
+    await rightsStore.patchRightsData(props.chapterId, checkedIdsArr)
     useNuxtApp().$toast.success('Данные сохранены')
     emit('handleModal')
   } catch (e) {
@@ -99,6 +103,7 @@ onMounted(() => {
       <div class="access__checkbox access__checkbox-all">
         <CustomCheckbox
           :checked="isAllChecked"
+          :disabled="rightsData.guest"
           @handleChange="toggleAll($event)"
           >Доступен всем заказчикам</CustomCheckbox
         >
@@ -116,6 +121,7 @@ onMounted(() => {
           />
           <CustomCheckbox
             :id="group.group_id"
+            :disabled="rightsData.guest"
             @handleChange="toggleGroup($event, index, group)"
             :checked="checkedUsers?.[index]?.length === group.users.length"
             :indeterminate="checkedUsers?.[index]?.length < group.users.length && checkedUsers?.[index]?.length !== 0"
@@ -133,6 +139,7 @@ onMounted(() => {
               :value="user.user_id"
               :id="user.user_id"
               :checked="user.pass"
+              :disabled="rightsData.guest"
               >{{ user.user_name }}</CustomCheckbox
             >
           </div>
@@ -149,6 +156,7 @@ onMounted(() => {
       <ButtonComponent
         class="footer__button"
         outline
+        @click="emit('handleModal')"
       >
         Отмена
       </ButtonComponent>

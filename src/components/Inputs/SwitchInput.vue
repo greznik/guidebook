@@ -18,7 +18,7 @@ defineProps<{}>()
   justify-content: center;
   gap: 12px;
   height: 28px;
-  line-height: 28px;
+  line-height: 20px;
   margin-right: 10px;
   position: relative;
   vertical-align: middle;
@@ -30,7 +30,6 @@ defineProps<{}>()
     font-family: 'Inter';
     font-size: 14px;
     line-height: 20px;
-    font-weight: 600;
     color: $textPrimary;
   }
 }
@@ -70,7 +69,7 @@ defineProps<{}>()
   box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.3);
 }
 .switcher input[type='checkbox']:checked + .switcher-switch {
-  background: limegreen;
+  background: $black;
 }
 .switcher input[type='checkbox']:checked + .switcher-switch:before {
   transform: translateX(20px);

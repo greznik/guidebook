@@ -9,7 +9,7 @@ const isPublishActive = ref(false)
 const { width } = useWindowSize({ initialWidth: 0 })
 const treeStore = useTreeStore()
 const { updateSeed } = useSeedsStore()
-const { updateGroup } = useGroupsStore()
+const { updateGroup, deleteGroup } = useGroupsStore()
 const { getDecodeToken } = storeToRefs(useAuthStore())
 
 const selectedItem = ref<any>({
@@ -64,6 +64,20 @@ const updateSeedName = useDebounceFn(async ($event) => {
     useNuxtApp().$toast.error('Не удалось изменить имя')
   }
 }, 500)
+
+const isAdminToken = computed(() => {
+  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
+})
+
+const deleteGroupHandle = async () => {
+  try {
+    await deleteGroup(getSidebarList.value.id)
+    await navigateTo({
+      path: '/',
+    })
+    refreshNuxtData('tree')
+  } catch (e) {}
+}
 </script>
 
 <template>
@@ -88,13 +102,26 @@ const updateSeedName = useDebounceFn(async ($event) => {
                 />
                 <p>Главная</p>
               </NuxtLink>
-              <input
-                v-if="getSidebarList"
-                v-model="getSidebarList.name"
-                class="sidebar__header-title"
-                @input="updateGroupName"
-                :readonly="getDecodeToken?.role !== 0"
-              />
+              <div class="sidebar__header-input">
+                <input
+                  v-if="getSidebarList"
+                  v-model="getSidebarList.name"
+                  placeholder="Новый отдел"
+                  class="sidebar__header-title"
+                  @input="updateGroupName"
+                  :readonly="!isAdminToken"
+                />
+                <button
+                  v-if="isAdminToken"
+                  class="sidebar__header-input_button"
+                  @click="deleteGroupHandle"
+                >
+                  <img
+                    src="~/assets/svg/deleteTrash.svg"
+                    alt=""
+                  />
+                </button>
+              </div>
             </div>
           </template>
         </Sidebar>
@@ -109,9 +136,10 @@ const updateSeedName = useDebounceFn(async ($event) => {
           <input
             v-if="selectedItem"
             v-model="selectedItem.name"
+            placeholder="Новый подраздел"
             @input="updateSeedName"
             class="content-block__input"
-            :readonly="getDecodeToken?.role !== 0"
+            :readonly="!isAdminToken"
           />
           <button
             class="content-block__burger"
@@ -123,7 +151,7 @@ const updateSeedName = useDebounceFn(async ($event) => {
               alt=""
             />
             <h2 class="content-block__burger-title">
-              {{ getSidebarList.chapters[0].name }} • {{ getSidebarList.name }}
+              {{ getSidebarList.name }} • {{ getSidebarList.chapters[0].name }}
             </h2>
             <img
               class="content-block__burger-image"
@@ -142,11 +170,11 @@ const updateSeedName = useDebounceFn(async ($event) => {
           >
         </div>
         <div class="content-block-wrapper__buttons">
-          <ButtonComponent
-            v-if="getDecodeToken?.role === 0"
+          <!-- <ButtonComponent
+            v-if="getDecodeToken?.role === 0 || getDecodeToken?.role === 1"
             :disabled="!isPublishActive"
             >Опубликовать</ButtonComponent
-          >
+          > -->
           <CopyLinkButton />
         </div>
       </div>
@@ -295,6 +323,26 @@ const updateSeedName = useDebounceFn(async ($event) => {
       align-items: center;
       justify-content: space-between;
       padding: 24px 24px 16px 24px;
+    }
+  }
+
+  &-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:hover .sidebar__header-input_button {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    &_button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.2s ease;
     }
   }
 }

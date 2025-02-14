@@ -7,6 +7,7 @@ defineProps<{
   value?: string
   id?: string
   checked: boolean
+  disabled: boolean
 }>()
 </script>
 
@@ -18,6 +19,7 @@ defineProps<{
       :id="id ? id : 'checkbox'"
       :value="value"
       :checked="checked"
+      :disabled="disabled"
       :indeterminate.prop="indeterminate"
       @change="$emit('handleChange', $event)"
       v-model="model"
@@ -43,6 +45,18 @@ defineProps<{
       font-size: 14px;
       line-height: 20px;
       color: $textPrimary;
+    }
+
+    &:disabled:checked + label:before {
+      border-color: $disabledCheckbox;
+      background-color: $disabledCheckbox;
+    }
+
+    &:disabled + label:before {
+      border-color: $disabledCheckbox;
+      background-color: $disabledCheckbox;
+      background-image: url('~/assets/svg/checkbox.svg');
+      background-size: 60%;
     }
 
     & + label:before {

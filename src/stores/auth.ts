@@ -6,21 +6,17 @@ import type { CookieRef } from '#app'
 
 interface IAuthState {
   user: IDecodeUser | null
-  userToken: CookieRef<string | null | undefined>
+  userToken: CookieRef<string>
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): IAuthState => ({
     user: null,
-    userToken: useCookie('token'),
+    userToken: useCookie('token') || '',
   }),
   getters: {
-    getDecodeToken: (state) => {
-      if (state.userToken) {
-        return jwtDecode(state.userToken)
-      } else {
-        return {}
-      }
+    getDecodeToken: (state): IDecodeUser => {
+      return jwtDecode(state.userToken)
     },
   },
   actions: {

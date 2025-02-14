@@ -26,10 +26,14 @@ const choiseDeleteItem = (item: any) => {
   emit('selectDeletingItem', item)
 }
 
+const isAdminToken = computed(() => {
+  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
+})
+
 onMounted(() => {
-  // if (props.item?.id === route.query.seed) {
-  //   selectItem(props.item)
-  // }
+  if (props.item?.id === route.query.seed) {
+    selectItem(props.item)
+  }
 })
 
 watch(
@@ -59,7 +63,7 @@ watch(
       <p class="navigation__list-text">{{ item.name }}</p>
     </button>
     <button
-      v-if="getDecodeToken?.role === 0 && route.name === 'content'"
+      v-if="isAdminToken && route.name === 'content' && card.seeds.length > 1"
       class="navigation__list-delete"
       @click="choiseDeleteItem(item)"
     >
