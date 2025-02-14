@@ -23,6 +23,11 @@ const emit = defineEmits(['isChangeContent'])
 const route = useRoute()
 const { updateSheet } = useSheetsStore()
 const { uploadFile } = useUploadStore()
+const { getDecodeToken } = storeToRefs(useAuthStore())
+
+const isAdminToken = computed(() => {
+  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
+})
 
 const updateTabContent = useDebounceFn(async (editor) => {
   emit('isChangeContent')
@@ -83,13 +88,15 @@ const createDropFileLink = (event: DragEvent) => {
 const editor = useEditor({
   content: props.content,
   onDrop: (event, slice, moved) => {
-    if (slice.content.childCount || moved) {
+    if (slice.content.childCount || moved || isAdminToken.value) {
       return
     }
     createDropFileLink(event)
   },
   onUpdate({ editor }) {
-    updateTabContent(editor)
+    if (isAdminToken.value) {
+      updateTabContent(editor)
+    }
   },
   extensions: [
     StarterKit,
@@ -115,12 +122,10 @@ const editor = useEditor({
   ],
 })
 
-const { getDecodeToken } = storeToRefs(useAuthStore())
-
 watch(
-  () => getDecodeToken.value,
+  () => isAdminToken.value,
   (value) => {
-    editor.value?.setEditable(value?.role === 0 || value?.role === 1)
+    editor.value?.setEditable(value)
   },
 )
 
@@ -136,7 +141,7 @@ watch(
 )
 
 onMounted(() => {
-  editor.value?.setEditable(getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1)
+  editor.value?.setEditable(isAdminToken.value)
 })
 </script>
 

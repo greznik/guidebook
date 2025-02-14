@@ -12,11 +12,15 @@ interface IAuthState {
 export const useAuthStore = defineStore('auth', {
   state: (): IAuthState => ({
     user: null,
-    userToken: useCookie('token') || '',
+    userToken: useCookie('token'),
   }),
   getters: {
-    getDecodeToken: (state): IDecodeUser => {
-      return jwtDecode(state.userToken)
+    getDecodeToken: (state) => {
+      if (state.userToken) {
+        return jwtDecode(state.userToken)
+      } else {
+        return {}
+      }
     },
   },
   actions: {

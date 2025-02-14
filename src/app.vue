@@ -77,6 +77,10 @@ storeToken(useCookie('token'))
   }
 }
 
+.Toastify__progress-bar {
+  display: none;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;

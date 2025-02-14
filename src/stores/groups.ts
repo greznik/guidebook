@@ -16,7 +16,7 @@ export const useGroupsStore = defineStore('groups', {
       }
     },
 
-    async deleteGroup(groupId: number) {
+    async deleteGroup(groupId: string) {
       try {
         const result = (await useApiFetch()(`/groups/delete?id=${groupId}`, {
           method: 'DELETE',

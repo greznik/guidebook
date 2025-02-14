@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { WIDTH_BREAKPOINT } from '~/constants'
 import CopyLinkButton from '~/components/Buttons/CopyLinkButton.vue'
-import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
+import DeleteModal from '~/components/Modals/DeleteModal.vue'
 import Sidebar from '~/components/Sidebar/Sidebar.vue'
 import EditorViewer from '~/components/EditorViewer.vue'
 
@@ -17,6 +17,7 @@ const selectedItem = ref<any>({
   name: '',
 })
 const isSidebarActive = ref<boolean>(false)
+const showDeleteModal = ref(false)
 
 const selectItem = (item: any) => {
   selectedItem.value = item
@@ -27,6 +28,10 @@ const route = useRoute()
 const getSidebarList = computed(() => {
   return treeStore.getSidebarItems(route.query.chapter as string)
 })
+
+const handleDeleteModal = () => {
+  showDeleteModal.value = !showDeleteModal.value
+}
 
 const closeSidebar = () => {
   isSidebarActive.value = false
@@ -83,6 +88,12 @@ const deleteGroupHandle = async () => {
 <template>
   <section class="content">
     <!-- ClientOnly обход ошибки гидратации -->
+    <DeleteModal
+      v-if="showDeleteModal"
+      @handleModal="handleDeleteModal"
+      :sidebarList="getSidebarList"
+      :deletingItem="getSidebarList"
+    />
     <ClientOnly>
       <Transition name="slide">
         <Sidebar
@@ -114,7 +125,7 @@ const deleteGroupHandle = async () => {
                 <button
                   v-if="isAdminToken"
                   class="sidebar__header-input_button"
-                  @click="deleteGroupHandle"
+                  @click="handleDeleteModal"
                 >
                   <img
                     src="~/assets/svg/deleteTrash.svg"

@@ -76,7 +76,7 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Разделитель',
-    description: 'Вставь горизонтальный разделитель',
+    description: 'Вставь разделитель',
     icon: 'mdi:minus',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).setHorizontalRule().run()

@@ -191,20 +191,20 @@ onMounted(() => {
         >
           <button
             class="card__header-button"
-            @click.stop="removeCard"
-          >
-            <img
-              src="~/assets/svg/deleteTrash.svg"
-              alt="delete image"
-            />
-          </button>
-          <button
-            class="card__header-button"
             @click.stop="editCardHandle"
           >
             <img
               src="~/assets/svg/editPopup.svg"
               alt="edit image"
+            />
+          </button>
+          <button
+            class="card__header-button"
+            @click.stop="removeCard"
+          >
+            <img
+              src="~/assets/svg/deleteTrash.svg"
+              alt="delete image"
             />
           </button>
         </div>
@@ -391,6 +391,7 @@ onMounted(() => {
 
       & img {
         border: none;
+
         margin: 0;
       }
     }

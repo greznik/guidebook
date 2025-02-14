@@ -1,21 +1,22 @@
 <script setup lang="ts">
-import type { IChapterItem, ISeedItem } from '~/types/app.types'
+import type { IChapterItem, IGroupItem, ISeedItem } from '~/types/app.types'
 import Modal from './Modal.vue'
 import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
 
 const emit = defineEmits(['handleModal'])
 const props = defineProps<{
   sidebarList: any
-  deletingItem: IChapterItem | ISeedItem | any
+  deletingItem: IChapterItem | ISeedItem | IGroupItem
 }>()
 
 const route = useRoute()
 const loading = ref(false)
 const { deleteChapter } = useChaptersStore()
 const { deleteSeed } = useSeedsStore()
+const { deleteGroup } = useGroupsStore()
 
 const setNextRoute = async () => {
-  if (props.deletingItem.type === 'chapter') {
+  if (props.deletingItem?.type === 'chapter') {
     if (props.deletingItem.id === route.query.chapter) {
       const chapterItem = props.sidebarList.chapters.find((item: IChapterItem) => {
         return item.id !== route.query.chapter
@@ -40,10 +41,16 @@ const setNextRoute = async () => {
 const deleteItem = async () => {
   loading.value = true
   try {
-    if (props.deletingItem.type === 'chapter') {
+    if (props.deletingItem?.type === 'chapter') {
       await deleteChapter(props.deletingItem.id as string, props.sidebarList.id)
-    } else {
+    } else if (props.deletingItem?.type === 'seed') {
       await deleteSeed(route.query.seed as string, route.query.chapter as string)
+    } else {
+      await deleteGroup(props.deletingItem.id as string)
+      await navigateTo({
+        path: '/',
+      })
+      refreshNuxtData('tree')
     }
     await setNextRoute()
     emit('handleModal')
@@ -55,18 +62,23 @@ const deleteItem = async () => {
 }
 
 const titleFromDeletingElement = computed(() => {
-  if (props.deletingItem.type === 'chapter') {
+  if (props.deletingItem?.type === 'chapter') {
     return 'Удалить раздел с подразделами?'
-  } else {
+  } else if (props.deletingItem?.type === 'seed') {
     return 'Удалить подраздел'
+  } else {
+    return 'Удалить отдел'
   }
 })
 
 const subtitleFromDeletingElement = computed(() => {
-  if (props.deletingItem.type === 'chapter') {
-    return `Раздел «${props.deletingItem.name}» и ${props.deletingItem.seeds.length} подраздела будут удалены без возможности восстановления`
-  } else {
+  const deletingItem = props.deletingItem as IChapterItem
+  if (deletingItem?.type === 'chapter') {
+    return `Раздел «${deletingItem.name}» и ${deletingItem.seeds.length} подраздела будут удалены без возможности восстановления`
+  } else if (deletingItem?.type === 'seed') {
     return 'Будет удален без возможности восстановления'
+  } else {
+    return 'Отдел будет безвозвратно удалён'
   }
 })
 </script>

@@ -62,7 +62,7 @@ const shouldShow: any = (props: {
   if (nodeAtSelection && nodeAtSelection.type.name === 'image') {
     return false
   }
-  if (!isAdminAuth) {
+  if (!isAdminAuth.value) {
     return false
   }
 

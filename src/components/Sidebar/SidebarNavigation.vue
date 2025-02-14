@@ -6,7 +6,7 @@ import SmallPopup from '~/components/Modals/SmallPopup.vue'
 import DeleteIcon from '~/assets/svg/deleteTrash.svg'
 import EditPopupIcon from '~/assets/svg/editPopup.svg'
 import AccessPopupIcon from '~/assets/svg/accessPopup.svg'
-import type { IChapterItem, ISeedItem } from '~/types/app.types'
+import type { IChapterItem, IGroupItem, ISeedItem } from '~/types/app.types'
 import AccessRightsModal from '../Modals/AccessRightsModal.vue'
 
 const emit = defineEmits(['selectItem'])
@@ -25,7 +25,7 @@ const route = useRoute()
 const showChapterModal = ref<boolean>(false)
 const showAccessModal = ref<boolean>(false)
 const showDeleteModal = ref<boolean>(false)
-const deletingItem = ref<IChapterItem | ISeedItem | null>(null)
+const deletingItem = ref<IChapterItem | ISeedItem | IGroupItem>(props.sidebarList)
 const chapterItem = ref<IChapterItem | null>(null)
 
 const selectItem = (item: any) => {
@@ -84,11 +84,18 @@ const editChapterHandle = (chapter: IChapterItem) => {
   handlePopup('')
 }
 
-const selectDeletingItem = (seletedItem: IChapterItem) => {
+const selectDeleteChapter = (seletedItem: IChapterItem) => {
   if (props.sidebarList.chapters.length === 1) {
-    useNuxtApp().$toast.error('Нельзя удалить посследний раздел')
+    useNuxtApp().$toast.error('Нельзя удалить последний раздел')
+    handlePopup('')
     return
   }
+  deletingItem.value = seletedItem
+  handleDeleteModal()
+  handlePopup('')
+}
+
+const selectDeletingItem = (seletedItem: IChapterItem) => {
   deletingItem.value = seletedItem
   handleDeleteModal()
   handlePopup('')
@@ -105,7 +112,7 @@ const popupButtons = reactive([
     id: 2,
     img: DeleteIcon,
     name: 'Удалить',
-    action: selectDeletingItem,
+    action: selectDeleteChapter,
   },
 ])
 </script>

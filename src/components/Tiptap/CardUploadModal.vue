@@ -82,7 +82,7 @@ onMounted(() => {
         <img
           :src="localSrc"
           :alt="localSrc"
-          class="image"
+          class="image-wrapper__image"
         />
       </div>
     </div>
@@ -226,10 +226,10 @@ onMounted(() => {
   overflow: hidden;
   max-width: 450px;
 
-  &.image {
+  &__image {
     width: 100%;
     height: auto;
-    margin-bottom: 24px;
+    margin-bottom: 24px !important;
     object-fit: cover;
     border: none;
   }
@@ -252,6 +252,7 @@ onMounted(() => {
   &__image {
     width: 100%;
     margin: 0;
+
     border: none;
     border-top-left-radius: $smallRadius;
     border-top-right-radius: $smallRadius;

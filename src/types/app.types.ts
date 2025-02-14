@@ -34,6 +34,12 @@ export interface IDecodeUser {
 
 export type typeOfTreeItem = 'group' | 'chapter' | 'seed' | 'sheet'
 
+export interface IGroupItem {
+  id: string
+  name: string
+  type: typeOfTreeItem
+  chapters: IChapterItem[]
+}
 export interface IChapterItem {
   id: string
   name: string
