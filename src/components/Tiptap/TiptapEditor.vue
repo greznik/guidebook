@@ -14,6 +14,7 @@ import CardUpload from '~/extensions/CardUpload'
 import FileUpload from '~/extensions/FileUpload'
 import Link from '@tiptap/extension-link'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
+import { ROLES } from '~/constants'
 
 const props = defineProps<{
   content: any
@@ -23,11 +24,7 @@ const emit = defineEmits(['isChangeContent'])
 const route = useRoute()
 const { updateSheet } = useSheetsStore()
 const { uploadFile } = useUploadStore()
-const { getDecodeToken } = storeToRefs(useAuthStore())
-
-const isAdminToken = computed(() => {
-  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
-})
+const { hasEditable } = storeToRefs(useAuthStore())
 
 const updateTabContent = useDebounceFn(async (editor) => {
   emit('isChangeContent')
@@ -88,13 +85,17 @@ const createDropFileLink = (event: DragEvent) => {
 const editor = useEditor({
   content: props.content,
   onDrop: (event, slice, moved) => {
-    if (slice.content.childCount || moved || isAdminToken.value) {
+    console.log('fileType', moved)
+
+    if (slice.content.childCount || moved) {
       return
     }
-    createDropFileLink(event)
+    if (hasEditable.value) {
+      createDropFileLink(event)
+    }
   },
   onUpdate({ editor }) {
-    if (isAdminToken.value) {
+    if (hasEditable.value) {
       updateTabContent(editor)
     }
   },
@@ -123,7 +124,7 @@ const editor = useEditor({
 })
 
 watch(
-  () => isAdminToken.value,
+  () => hasEditable.value,
   (value) => {
     editor.value?.setEditable(value)
   },
@@ -141,7 +142,7 @@ watch(
 )
 
 onMounted(() => {
-  editor.value?.setEditable(isAdminToken.value)
+  editor.value?.setEditable(hasEditable.value)
 })
 </script>
 

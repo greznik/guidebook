@@ -7,6 +7,7 @@ import SmallPopup from '~/components/Modals/SmallPopup.vue'
 import UsersModal from '~/components/Modals/UsersModal.vue'
 import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
 import SignOutIcon from '~/assets/svg/signOutIcon.svg'
+import UserPopupIcon from '~/assets/svg/usersPopup.svg'
 
 const { userToken, getDecodeToken } = storeToRefs(useAuthStore())
 const isShowPoppup = ref(false)
@@ -28,6 +29,7 @@ const logoutUser = async () => {
 }
 
 const handleUsersModal = () => {
+  isShowPoppup.value = false
   isShowUsers.value = !isShowUsers.value
 }
 
@@ -36,7 +38,7 @@ const handlePopup = () => {
 }
 
 const popupButtons = [
-  // { id: 0, name: 'Сотрудники', img: UserPopupIcon, action: handleUsersModal, class: '' },
+  { id: 0, name: 'Сотрудники', img: UserPopupIcon, action: handleUsersModal, class: '' },
   { id: 1, name: 'Выйти', img: SignOutIcon, action: logoutUser, class: 'exit' },
 ]
 </script>
@@ -53,7 +55,10 @@ const popupButtons = [
 
   <div class="header__buttons">
     <Transition name="fade">
-      <SmallPopup @handlePopup="handlePopup" v-if="isShowPoppup">
+      <SmallPopup
+        @handlePopup="handlePopup"
+        v-if="isShowPoppup"
+      >
         <button
           v-for="button in popupButtons"
           :key="button.id"
@@ -83,6 +88,7 @@ const popupButtons = [
     <ButtonComponent
       v-if="!userToken"
       @click="emit('handleModal')"
+      class="header__button"
     >
       Войти
     </ButtonComponent>
@@ -94,6 +100,7 @@ const popupButtons = [
         ref="authButtonRef"
         isAuth
         user
+        class="header__button"
         @click="handlePopup"
       >
         {{ getDecodeToken?.name }}
@@ -120,6 +127,12 @@ const popupButtons = [
     gap: 24px;
     width: fit-content;
     margin-left: auto;
+  }
+
+  &__button {
+    font-family: 'Inter';
+    font-size: 16px;
+    line-height: 20px;
   }
 
   &__search {

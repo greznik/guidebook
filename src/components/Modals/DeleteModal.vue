@@ -137,6 +137,10 @@ const subtitleFromDeletingElement = computed(() => {
   }
 
   &__button {
+    font-family: 'Inter';
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: 400;
     width: fit-content;
   }
 }

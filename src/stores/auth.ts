@@ -1,8 +1,9 @@
 import { defineStore } from 'pinia'
-import { jwtDecode } from 'jwt-decode'
+import { jwtDecode, type JwtPayload } from 'jwt-decode'
 import { useStorage } from '@vueuse/core'
 import type { IDecodeUser } from '~/types/app.types'
 import type { CookieRef } from '#app'
+import { ROLES } from '~/constants'
 
 interface IAuthState {
   user: IDecodeUser | null
@@ -20,6 +21,14 @@ export const useAuthStore = defineStore('auth', {
         return jwtDecode(state.userToken)
       } else {
         return {}
+      }
+    },
+    hasEditable: (state) => {
+      if (state.userToken) {
+        const user = jwtDecode<IDecodeUser>(state.userToken)
+        return user.role === ROLES.ADMINS || user.role === ROLES.MODERATORS
+      } else {
+        return false
       }
     },
   },

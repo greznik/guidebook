@@ -8,10 +8,11 @@ import EditPopupIcon from '~/assets/svg/editPopup.svg'
 import AccessPopupIcon from '~/assets/svg/accessPopup.svg'
 import type { IChapterItem, IGroupItem, ISeedItem } from '~/types/app.types'
 import AccessRightsModal from '../Modals/AccessRightsModal.vue'
+import { ROLES } from '~/constants'
 
 const emit = defineEmits(['selectItem'])
 
-const { getDecodeToken } = storeToRefs(useAuthStore())
+const { hasEditable } = storeToRefs(useAuthStore())
 const { createSeed } = useSeedsStore()
 
 const props = defineProps<{
@@ -101,10 +102,6 @@ const selectDeletingItem = (seletedItem: IChapterItem) => {
   handlePopup('')
 }
 
-const isAdminToken = computed(() => {
-  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
-})
-
 const popupButtons = reactive([
   { id: 0, img: EditPopupIcon, name: 'Редактировать', action: editChapterHandle },
   { id: 1, img: AccessPopupIcon, name: 'Права доступа', action: accessModalHandle },
@@ -187,7 +184,7 @@ const popupButtons = reactive([
             />
             {{ chapter.name }}
             <button
-              v-if="isAdminToken && route.name === 'content'"
+              v-if="hasEditable && route.name === 'content'"
               class="navigation__list-button"
               @click="handlePopup(chapter.id)"
             >
@@ -206,7 +203,7 @@ const popupButtons = reactive([
             @selectDeletingItem="selectDeletingItem"
           />
           <ButtonComponent
-            v-if="isAdminToken"
+            v-if="hasEditable"
             @click="addSeedHandle(chapter.id)"
             hasIcon
             transparent
@@ -219,7 +216,7 @@ const popupButtons = reactive([
     </ul>
 
     <ButtonComponent
-      v-if="isAdminToken"
+      v-if="hasEditable"
       class="navigation__button"
       @click="showChapterModalHandle"
       hasIcon
@@ -256,6 +253,9 @@ const popupButtons = reactive([
   &__button {
     margin-bottom: 16px;
     margin-top: auto;
+    font-family: 'Inter';
+    font-size: 16px;
+    line-height: 20px;
   }
 
   &__list {
@@ -318,6 +318,9 @@ const popupButtons = reactive([
   }
 
   &__subsection-button {
+    font-family: 'Inter';
+    font-size: 16px;
+    line-height: 20px;
     margin-top: 8px;
   }
 }

@@ -17,6 +17,14 @@ const props = defineProps({
 })
 
 const { value, errorMessage, meta } = useField(() => props.name)
+watch(
+  () => errorMessage.value,
+  (newValue) => {
+    if (newValue.includes('password')) {
+      useNuxtApp().$toast.error('Пароль должен содержать минимум 8 символов и латинские буквы')
+    }
+  },
+)
 </script>
 
 <template>
@@ -99,8 +107,8 @@ const { value, errorMessage, meta } = useField(() => props.name)
 .input {
   height: 40px;
   border-radius: $smallRadius;
-  padding: 0px 20px;
-  font-size: 14px;
+  padding: 0px 12px;
+  font-size: 16px;
   background-color: $greyNeutral;
   border: none;
 

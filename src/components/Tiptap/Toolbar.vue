@@ -2,6 +2,7 @@
 import { Editor, BubbleMenu } from '@tiptap/vue-3'
 import type { EditorState } from '@tiptap/pm/state'
 import type { EditorView } from '@tiptap/pm/view'
+import { ROLES } from '~/constants'
 
 interface ContentType {
   name: string
@@ -29,11 +30,7 @@ const props = defineProps<{
 
 const showContentTypeMenu = ref(false)
 const showColorMenu = ref(false)
-const { getDecodeToken } = storeToRefs(useAuthStore())
-
-const isAdminAuth = computed(() => {
-  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
-})
+const { hasEditable } = storeToRefs(useAuthStore())
 
 const shouldShow: any = (props: {
   editor: Editor
@@ -62,7 +59,7 @@ const shouldShow: any = (props: {
   if (nodeAtSelection && nodeAtSelection.type.name === 'image') {
     return false
   }
-  if (!isAdminAuth.value) {
+  if (!hasEditable.value) {
     return false
   }
 

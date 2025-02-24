@@ -1,5 +1,6 @@
 import { Editor } from '@tiptap/core'
 import type { Range } from '@tiptap/core'
+import type { JwtPayload } from 'jwt-decode'
 
 export interface ICards {
   id: number
@@ -23,7 +24,7 @@ export type SuggestionItem = {
   command: (props: { editor: Editor; range: Range }) => void
 }
 
-export interface IDecodeUser {
+export interface IDecodeUser extends JwtPayload {
   category: string
   email: string
   exp: number
@@ -75,4 +76,10 @@ export interface IRightsDataUsers {
 export interface IRightsData {
   groups: IRightsDataGroups[]
   guest: boolean
+}
+
+export interface IRequest<T> {
+  message: string,
+  status: string,
+  body: T
 }

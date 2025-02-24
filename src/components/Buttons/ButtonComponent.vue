@@ -10,6 +10,7 @@ interface IButton {
   user?: boolean
   outline?: boolean
   isDelete?: boolean
+  iconColor?: string
 }
 
 withDefaults(defineProps<IButton>(), {
@@ -20,6 +21,7 @@ withDefaults(defineProps<IButton>(), {
   isAuth: false,
   outline: false,
   isDelete: false,
+  iconColor: '#F9FAFB',
 })
 </script>
 
@@ -30,10 +32,11 @@ withDefaults(defineProps<IButton>(), {
     :class="{ active: isAuth, transparent: transparent, user: user, outline: outline, delete: isDelete }"
     :type="type"
   >
-    <PlusIcon v-if="hasIcon" />
-    <p class="button__text">
-      <slot />
-    </p>
+    <PlusIcon
+      v-if="hasIcon"
+      :color="iconColor"
+    />
+    <slot />
     <slot name="icon"></slot>
   </button>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { WIDTH_BREAKPOINT } from '~/constants'
+import { ROLES, WIDTH_BREAKPOINT } from '~/constants'
 import CopyLinkButton from '~/components/Buttons/CopyLinkButton.vue'
 import DeleteModal from '~/components/Modals/DeleteModal.vue'
 import Sidebar from '~/components/Sidebar/Sidebar.vue'
@@ -10,7 +10,7 @@ const { width } = useWindowSize({ initialWidth: 0 })
 const treeStore = useTreeStore()
 const { updateSeed } = useSeedsStore()
 const { updateGroup, deleteGroup } = useGroupsStore()
-const { getDecodeToken } = storeToRefs(useAuthStore())
+const { hasEditable } = storeToRefs(useAuthStore())
 
 const selectedItem = ref<any>({
   id: '',
@@ -70,10 +70,6 @@ const updateSeedName = useDebounceFn(async ($event) => {
   }
 }, 500)
 
-const isAdminToken = computed(() => {
-  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
-})
-
 const deleteGroupHandle = async () => {
   try {
     await deleteGroup(getSidebarList.value.id)
@@ -120,10 +116,10 @@ const deleteGroupHandle = async () => {
                   placeholder="Новый отдел"
                   class="sidebar__header-title"
                   @input="updateGroupName"
-                  :readonly="!isAdminToken"
+                  :readonly="!hasEditable"
                 />
                 <button
-                  v-if="isAdminToken"
+                  v-if="hasEditable"
                   class="sidebar__header-input_button"
                   @click="handleDeleteModal"
                 >
@@ -150,7 +146,7 @@ const deleteGroupHandle = async () => {
             placeholder="Новый подраздел"
             @input="updateSeedName"
             class="content-block__input"
-            :readonly="!isAdminToken"
+            :readonly="!hasEditable"
           />
           <button
             class="content-block__burger"

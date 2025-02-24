@@ -2,6 +2,7 @@
 import { NodeViewWrapper } from '@tiptap/vue-3'
 import type { Editor } from '@tiptap/core'
 import { useUploadStore } from '~/stores/upload'
+import { ROLES } from '~/constants';
 import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
 import CardUploadModal from './CardUploadModal.vue'
 import CardViewerModal from './CardViewerModal.vue'
@@ -20,7 +21,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const { getDecodeToken } = storeToRefs(useAuthStore())
+const { hasEditable } = storeToRefs(useAuthStore())
 const { uploadFile } = useUploadStore()
 
 const showModal = ref<boolean>(false)
@@ -187,7 +188,7 @@ onMounted(() => {
       >
         <div
           class="card__header"
-          v-if="getDecodeToken?.role === 0 || getDecodeToken?.role === 1"
+          v-if="hasEditable"
         >
           <button
             class="card__header-button"

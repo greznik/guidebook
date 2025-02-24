@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ROLES } from '~/constants';
+
 const props = defineProps<{
   item: any
   card: any
@@ -6,7 +8,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['selectItem', 'selectDeletingItem'])
 
-const { getDecodeToken } = storeToRefs(useAuthStore())
+const { hasEditable } = storeToRefs(useAuthStore())
 const route = useRoute()
 
 const selectItem = async (item: any) => {
@@ -25,10 +27,6 @@ const choiseDeleteItem = (item: any) => {
   selectItem(item)
   emit('selectDeletingItem', item)
 }
-
-const isAdminToken = computed(() => {
-  return getDecodeToken.value?.role === 0 || getDecodeToken.value?.role === 1
-})
 
 onMounted(() => {
   if (props.item?.id === route.query.seed) {
@@ -63,7 +61,7 @@ watch(
       <p class="navigation__list-text">{{ item.name }}</p>
     </button>
     <button
-      v-if="isAdminToken && route.name === 'content' && card.seeds.length > 1"
+      v-if="hasEditable && route.name === 'content' && card.seeds.length > 1"
       class="navigation__list-delete"
       @click="choiseDeleteItem(item)"
     >

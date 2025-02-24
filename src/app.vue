@@ -46,6 +46,7 @@ storeToken(useCookie('token'))
 :root {
   --toastify-toast-min-height: 40px;
   --toastify-icon-color-info: #ff8b00;
+  --toastify-toast-width: 400px;
 }
 
 .Toastify__toast-theme--light {
