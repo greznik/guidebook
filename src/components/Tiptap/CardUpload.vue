@@ -2,7 +2,7 @@
 import { NodeViewWrapper } from '@tiptap/vue-3'
 import type { Editor } from '@tiptap/core'
 import { useUploadStore } from '~/stores/upload'
-import { ROLES } from '~/constants';
+import { ROLES } from '~/constants'
 import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
 import CardUploadModal from './CardUploadModal.vue'
 import CardViewerModal from './CardViewerModal.vue'
@@ -70,9 +70,8 @@ const handleLoadCard = async () => {
   })
 
   isLoading.value = false
-  props.editor.commands.blur()
   handleModal()
-  handleEnter()
+  // handleEnter()
 }
 
 const caption = ref(props.node.attrs.caption || '')
@@ -143,110 +142,109 @@ onMounted(() => {
 </script>
 
 <template>
-  <node-view-wrapper>
-    <div
-      class="card-upload"
-      draggable="true"
-      data-drag-handle
+  <node-view-wrapper
+    draggable="true"
+    data-drag-handle
+    class="card-upload"
+  >
+    <Teleport to="#teleports">
+      <Transition name="fade">
+        <CardViewerModal
+          v-if="showViewerModal"
+          :imageSrc="node.attrs.src"
+          :title="node.attrs.title"
+          :subtitle="node.attrs.caption"
+          @handleModal="handleViewerModal"
+        />
+      </Transition>
+
+      <Transition name="fade">
+        <CardUploadModal
+          v-if="showModal"
+          v-model:title="cardTitle"
+          v-model:description="cardDescription"
+          :localSrc="localSrc"
+          :isLoading="isLoading"
+          @removeImage="removeImage"
+          @handleFileUpload="handleFileUpload"
+          @handleLoadCard="handleLoadCard"
+          @handleModal="handleModal"
+        />
+      </Transition>
+    </Teleport>
+
+    <ButtonComponent
+      outline
+      @click="handleOpenCard"
+      v-if="!node.attrs.src"
+      class="card-upload__button_add"
+      >Создать карточку</ButtonComponent
     >
-      <Teleport to="#teleports">
-        <Transition name="fade">
-          <CardViewerModal
-            v-if="showViewerModal"
-            :imageSrc="node.attrs.src"
-            :title="node.attrs.title"
-            :subtitle="node.attrs.caption"
-            @handleModal="handleViewerModal"
-          />
-        </Transition>
-
-        <Transition name="fade">
-          <CardUploadModal
-            v-if="showModal"
-            v-model:title="cardTitle"
-            v-model:description="cardDescription"
-            :localSrc="localSrc"
-            :isLoading="isLoading"
-            @removeImage="removeImage"
-            @handleFileUpload="handleFileUpload"
-            @handleLoadCard="handleLoadCard"
-            @handleModal="handleModal"
-          />
-        </Transition>
-      </Teleport>
-
-      <ButtonComponent
-        outline
-        @click="handleOpenCard"
-        v-if="!node.attrs.src"
-        >Создать карточку</ButtonComponent
-      >
+    <div
+      class="card"
+      @click.prevent="handleViewerModal"
+      v-else
+    >
       <div
-        class="card"
-        @click.prevent="handleViewerModal"
-        v-else
+        class="card__header"
+        v-if="hasEditable"
       >
-        <div
-          class="card__header"
-          v-if="hasEditable"
+        <button
+          class="card__header-button"
+          @click.stop="editCardHandle"
         >
-          <button
-            class="card__header-button"
-            @click.stop="editCardHandle"
-          >
-            <img
-              src="~/assets/svg/editPopup.svg"
-              alt="edit image"
-            />
-          </button>
-          <button
-            class="card__header-button"
-            @click.stop="removeCard"
-          >
-            <img
-              src="~/assets/svg/deleteTrash.svg"
-              alt="delete image"
-            />
-          </button>
-        </div>
-        <div>
           <img
-            :src="node.attrs.src"
-            alt="file"
-            class="card__image"
+            src="~/assets/svg/editPopup.svg"
+            alt="edit image"
           />
-          <div class="card__wrapper">
-            <div
-              class="card__title"
-              v-if="title"
-            >
-              <h2 class="card__title-text">{{ title }}</h2>
-              <img
-                @click.stop="copyTitle"
-                class="card__title-icon"
-                src="~/assets/svg/cardCopyButton.svg"
-                alt="copy image"
-              />
-            </div>
-            <p class="card__subtitle">
-              {{ caption }}
-            </p>
-            <a
-              class="card__download-link"
-              :href="node.attrs.src"
-              :download="node.attrs.src"
-              target="_blank"
-              @click.stop=""
-              v-if="node.attrs.src"
-            >
-              <img
-                class="card__download-link_icon"
-                src="~/assets/svg/cardDownload.svg"
-                alt=""
-              />
-              <span>Скачать</span>
-            </a>
+        </button>
+        <button
+          class="card__header-button"
+          @click.stop="removeCard"
+        >
+          <img
+            src="~/assets/svg/deleteTrash.svg"
+            alt="delete image"
+          />
+        </button>
+      </div>
+      <div>
+        <img
+          :src="node.attrs.src"
+          alt="file"
+          class="card__image"
+        />
+        <div class="card__wrapper">
+          <div
+            class="card__title"
+            v-if="title"
+          >
+            <h2 class="card__title-text">{{ title }}</h2>
+            <img
+              @click.stop="copyTitle"
+              class="card__title-icon"
+              src="~/assets/svg/cardCopyButton.svg"
+              alt="copy image"
+            />
           </div>
+          <p class="card__subtitle" v-html="caption">
+            
+          </p>
+          <a
+            class="card__download-link"
+            :href="node.attrs.src"
+            :download="node.attrs.src"
+            target="_blank"
+            @click.stop=""
+            v-if="node.attrs.src"
+          >
+            <img
+              class="card__download-link_icon"
+              src="~/assets/svg/cardDownload.svg"
+              alt=""
+            />
+            <span>Скачать</span>
+          </a>
         </div>
       </div>
     </div>
@@ -255,11 +253,16 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .card-upload {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   gap: 24px;
   width: fit-content;
-  padding: 1rem 0;
+  margin: 24px 0;
+  margin-right: 24px;
+
+  &__button_add {
+    font-size: 16px;
+  }
 
   &__input {
     display: none;
@@ -435,7 +438,8 @@ onMounted(() => {
     font-size: 16px;
     line-height: 20px;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    white-space: pre;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
     color: $textPrimary;

@@ -17,9 +17,8 @@ interface Props {
 const props = defineProps<Props>()
 
 const handleEnter = () => {
-  console.log(props.editor.commands)
-  // props.editor.commands.focus()
-  // props.editor.commands.enter()
+  props.editor.commands.focus()
+  props.editor.commands.enter()
 }
 
 onMounted(() => {
@@ -28,8 +27,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <NodeViewWrapper>
-    <div class="file-upload">
+  <NodeViewWrapper class="file-upload">
+    <div class="file-upload__wrapper">
       <img
         class="file-upload__icon"
         src="~/assets/svg/loadDocument.svg"
@@ -50,16 +49,25 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .file-upload {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 8px;
   font-size: 16px;
   line-height: 20px;
   margin-top: 24px;
   margin-bottom: 24px;
   padding: 4px;
-  transition: box-shadow 0.2s ease;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  &:hover {
+    background-color: $disabledPrimary;
+    border-radius: $smallRadius;
+  }
 
   &__link {
     font-weight: 700;

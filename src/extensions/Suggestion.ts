@@ -66,7 +66,7 @@ const items: SuggestionItem[] = [
   {
     name: 'Карточка',
     description: 'Загрузи карточку',
-    icon: 'mdi:file',
+    icon: 'mdi:card',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).insertContent('<card-upload></card-upload>').run()
 

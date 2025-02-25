@@ -77,6 +77,12 @@ onUpdated(() => {
     name.value = ''
   }
 })
+
+onMounted(() => {
+  if (props.chapterItem?.name) {
+    fullName.value = props.chapterItem.name
+  }
+})
 </script>
 
 <template>

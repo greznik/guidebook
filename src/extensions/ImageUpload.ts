@@ -11,11 +11,10 @@ export interface ImageUploadAttributes {
 export const ImageUploadNode = Node.create<never, ImageUploadAttributes>({
   name: 'imageUpload',
   
-  inline: true,
-  group: 'inline',
+  group: 'block',
   selectable: true,
 
-  atom: false,
+  atom: true,
   draggable: true,
 
   addAttributes() {

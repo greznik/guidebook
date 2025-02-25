@@ -170,6 +170,7 @@ onMounted(() => {
     gap: 16px;
 
     & button {
+      font-size: 16px;
       width: auto;
     }
   }

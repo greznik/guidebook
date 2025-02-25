@@ -68,7 +68,7 @@ const handleFileUpload = (event: Event) => {
         altText.value = file.name
       }
     }
-    // handleEnter()
+    handleEnter()
     reader.readAsDataURL(file)
   }
 }
@@ -120,38 +120,34 @@ onMounted(() => {
 
 <template>
   <node-view-wrapper class="image-upload">
-    <input
-      type="file"
-      accept="image/*"
-      @change="handleFileUpload"
-      ref="fileInput"
-      class="image-upload__input"
-    />
-    <ButtonComponent
-      outline
-      class="image-upload__button"
-      @click="triggerFileInput"
-      v-if="!node.attrs.src"
-      >Нажмите, чтобы выбрать картинку</ButtonComponent
-    >
-    <div
+    <template v-if="!node.attrs.src">
+      <input
+        type="file"
+        accept="image/*"
+        @change="handleFileUpload"
+        ref="fileInput"
+        class="image-upload__input"
+      />
+      <ButtonComponent
+        outline
+        class="image-upload__button"
+        @click="triggerFileInput"
+        >Нажмите, чтобы выбрать картинку</ButtonComponent
+      >
+    </template>
+    <img
       v-else
-      class="image-block"
-    >
-      <div class="image-wrapper">
-        <img
-          :src="node.attrs.src"
-          :alt="node.attrs.alt"
-          class="image-wrapper__image"
-        />
-      </div>
-    </div>
+      :src="node.attrs.src"
+      :alt="node.attrs.alt"
+      class="image"
+    />
   </node-view-wrapper>
 </template>
 
 <style lang="scss" scoped>
 .image-upload {
   width: fit-content;
+  margin: 24px 0;
 
   &__input {
     display: none;
@@ -178,11 +174,9 @@ onMounted(() => {
   }
 }
 
-.image-wrapper {
-  &__image {
-    height: auto;
-    object-fit: cover;
-    transition: box-shadow 0.2s ease;
-  }
+.image {
+  height: auto;
+  object-fit: cover;
+  transition: box-shadow 0.2s ease;
 }
 </style>

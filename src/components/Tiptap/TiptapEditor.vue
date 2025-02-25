@@ -85,7 +85,6 @@ const createDropFileLink = (event: DragEvent) => {
 const editor = useEditor({
   content: props.content,
   onDrop: (event, slice, moved) => {
-    console.log('fileType', moved)
 
     if (slice.content.childCount || moved) {
       return
@@ -158,7 +157,7 @@ onMounted(() => {
 
 <style lang="scss">
 .image {
-  max-width: 100%;
+  width: 100%;
   position: relative;
 }
 .tiptap {
@@ -277,14 +276,12 @@ onMounted(() => {
 .tiptap hr {
   border: 0;
   border-top: 1px solid #ccc;
-  margin: 2rem 0;
+  margin: 24px 0;
 }
 
 .tiptap img {
   max-width: 100%;
   height: auto;
-  border-radius: 4px;
-  margin: 1rem 0;
   object-fit: contain;
 }
 
@@ -315,10 +312,13 @@ onMounted(() => {
 }
 
 .editor-image {
+  margin-top: 24px;
+  margin-bottom: 24px;
+  margin-right: 24px;
   transition: box-shadow 0.2s ease;
 }
 
-.ProseMirror-selectednode .image-wrapper__image {
+.ProseMirror-selectednode .image {
   box-shadow: 0px 0px 20px 0px #0101011a;
   box-shadow: 0px 8px 12px 0px #01010133;
 }
@@ -334,8 +334,8 @@ onMounted(() => {
 }
 
 .ProseMirror-selectednode .file-upload {
-  box-shadow: 0px 0px 20px 0px #0101011a;
-  box-shadow: 0px 8px 12px 0px #01010133;
+  box-shadow: 0px 0px 8px 0px #0101011a;
+  box-shadow: 0px 2px 4px 0px #01010133;
   border-radius: 8px;
 }
 </style>
