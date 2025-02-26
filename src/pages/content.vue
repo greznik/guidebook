@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { ROLES, WIDTH_BREAKPOINT } from '~/constants'
-import CopyLinkButton from '~/components/Buttons/CopyLinkButton.vue'
+import { useBrowserLocation } from '@vueuse/core'
+import { WIDTH_BREAKPOINT } from '~/constants'
+import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
+import Tooltip from '~/components/Tooltip/Tooltip.vue'
 import DeleteModal from '~/components/Modals/DeleteModal.vue'
 import Sidebar from '~/components/Sidebar/Sidebar.vue'
 import EditorViewer from '~/components/EditorViewer.vue'
 
+const location = useBrowserLocation()
+const route = useRoute()
 const isPublishActive = ref(false)
 const { width } = useWindowSize({ initialWidth: 0 })
 const treeStore = useTreeStore()
@@ -23,7 +27,12 @@ const selectItem = (item: any) => {
   selectedItem.value = item
 }
 
-const route = useRoute()
+const onCopy = () => {
+  useNuxtApp().$toast.info('Ссылка скопирована')
+  if (location.value.href) {
+    navigator.clipboard.writeText(location.value.href)
+  }
+}
 
 const getSidebarList = computed(() => {
   return treeStore.getSidebarItems(route.query.chapter as string)
@@ -182,7 +191,20 @@ const deleteGroupHandle = async () => {
             :disabled="!isPublishActive"
             >Опубликовать</ButtonComponent
           > -->
-          <CopyLinkButton />
+          <Tooltip text="Поделиться">
+            <ButtonComponent
+              class="content-block__copy-button"
+              outline
+              @click="onCopy"
+            >
+              <template #icon>
+                <img
+                  src="~/assets/svg/copyLink.svg"
+                  alt=""
+                />
+              </template>
+            </ButtonComponent>
+          </Tooltip>
         </div>
       </div>
     </div>
@@ -232,6 +254,11 @@ const deleteGroupHandle = async () => {
     @media screen and (max-width: $big) {
       display: none;
     }
+  }
+
+  &__copy-button {
+    width: fit-content;
+    padding: 8px;
   }
 
   &__burger {

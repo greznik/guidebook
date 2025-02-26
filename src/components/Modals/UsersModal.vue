@@ -4,7 +4,8 @@ import { getSubmitFn } from '~/helpers/getSubmitFn'
 import { Form, useField } from 'vee-validate'
 
 import { ROLES_NAMES } from '~/constants'
-import type { ICreateUserBody, IUserInfo, IUsersList } from '~/stores/users'
+import type { IUsersList } from '~/stores/users'
+import Tooltip from '~/components/Tooltip/Tooltip.vue'
 import Modal from './Modal.vue'
 import CustomInput from '~/components/Inputs/CustomInput.vue'
 import CustomSelect from '~/components/Inputs/CustomSelect.vue'
@@ -234,18 +235,20 @@ const { value, errorMessage, meta } = useField(() => 'login')
                     />
                   </template>
                 </ButtonComponent>
-                <ButtonComponent
-                  outline
-                  @click="deleteUser(user.id)"
-                  class="form__button"
-                >
-                  <template #icon>
-                    <img
-                      src="~/assets/svg/deleteTrash.svg"
-                      alt="delete"
-                    />
-                  </template>
-                </ButtonComponent>
+                <Tooltip text="Удалить">
+                  <ButtonComponent
+                    outline
+                    @click="deleteUser(user.id)"
+                    class="form__button"
+                  >
+                    <template #icon>
+                      <img
+                        src="~/assets/svg/deleteTrash.svg"
+                        alt="delete"
+                      />
+                    </template>
+                  </ButtonComponent>
+                </Tooltip>
               </div>
             </div>
           </template>
