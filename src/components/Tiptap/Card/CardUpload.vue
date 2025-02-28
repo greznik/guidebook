@@ -2,7 +2,6 @@
 import { NodeViewWrapper } from '@tiptap/vue-3'
 import type { Editor } from '@tiptap/core'
 import { useUploadStore } from '~/stores/upload'
-import { ROLES } from '~/constants'
 import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
 import CardUploadModal from './CardUploadModal.vue'
 import CardViewerModal from './CardViewerModal.vue'
@@ -185,67 +184,65 @@ onMounted(() => {
       @click.prevent="handleViewerModal"
       v-else
     >
-      <div
-        class="card__header"
-        v-if="hasEditable"
-      >
-        <button
+      <div class="card__header">
+        <a
           class="card__header-button"
-          @click.stop="editCardHandle"
+          :href="node.attrs.src"
+          :download="node.attrs.src"
+          target="_blank"
+          @click.stop=""
+          v-if="node.attrs.src"
         >
           <img
-            src="~/assets/svg/editPopup.svg"
-            alt="edit image"
+            src="~/assets/svg/cardDownload.svg"
+            alt=""
           />
-        </button>
-        <button
-          class="card__header-button"
-          @click.stop="removeCard"
-        >
-          <img
-            src="~/assets/svg/deleteTrash.svg"
-            alt="delete image"
-          />
-        </button>
+        </a>
+        <template v-if="hasEditable">
+          <button
+            class="card__header-button"
+            @click.stop="editCardHandle"
+          >
+            <img
+              src="~/assets/svg/editPopup.svg"
+              alt="edit image"
+            />
+          </button>
+          <button
+            class="card__header-button"
+            @click.stop="removeCard"
+          >
+            <img
+              src="~/assets/svg/deleteTrash.svg"
+              alt="delete image"
+            />
+          </button>
+        </template>
       </div>
-      <div>
+      <div class="image-wrapper">
         <img
           :src="node.attrs.src"
           alt="file"
           class="card__image"
         />
-        <div class="card__wrapper">
-          <div
-            class="card__title"
-            v-if="title"
-          >
-            <h2 class="card__title-text">{{ title }}</h2>
-            <img
-              @click.stop="copyTitle"
-              class="card__title-icon"
-              src="~/assets/svg/cardCopyButton.svg"
-              alt="copy image"
-            />
-          </div>
-          <p class="card__subtitle" v-html="caption">
-            
-          </p>
-          <a
-            class="card__download-link"
-            :href="node.attrs.src"
-            :download="node.attrs.src"
-            target="_blank"
-            @click.stop=""
-            v-if="node.attrs.src"
-          >
-            <img
-              class="card__download-link_icon"
-              src="~/assets/svg/cardDownload.svg"
-              alt=""
-            />
-            <span>Скачать</span>
-          </a>
+      </div>
+      <div class="card__wrapper">
+        <div
+          class="card__title"
+          v-if="title"
+        >
+          <h2 class="card__title-text">{{ title }}</h2>
+          <img
+            @click.stop="copyTitle"
+            class="card__title-icon"
+            src="~/assets/svg/cardCopyButton.svg"
+            alt="copy image"
+          />
         </div>
+        <p
+          class="card__subtitle"
+          v-html="caption"
+        ></p>
       </div>
     </div>
   </node-view-wrapper>
@@ -384,6 +381,7 @@ onMounted(() => {
     transition: opacity 0.2s ease;
 
     &-button {
+      display: flex;
       margin-top: 8px;
       background-color: $white;
       padding: 8px;
@@ -410,15 +408,16 @@ onMounted(() => {
   }
 
   &__wrapper {
-    padding: 16px;
+    margin: 16px;
+    margin-top: 6px;
   }
 
   &__title {
     margin-bottom: 8px;
     &-text {
       display: inline;
-      font-family: 'Gilroy';
-      font-weight: 700;
+      color: $textPrimary;
+      font-weight: 600;
       font-size: 20px;
       line-height: 24px;
     }
@@ -427,8 +426,8 @@ onMounted(() => {
       cursor: pointer;
       border: none;
       margin: 0;
-      margin-left: 12px;
-      margin-bottom: -5px;
+      margin-left: 8px;
+      margin-bottom: -2px;
     }
   }
 
@@ -437,13 +436,13 @@ onMounted(() => {
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
+    
     display: -webkit-box;
     white-space: pre;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    color: $textPrimary;
-    margin-bottom: 16px;
+    color: $textSecondary;
   }
 
   &__download-link {

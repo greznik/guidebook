@@ -39,13 +39,11 @@ const copyTitle = () => {
           </button>
         </div>
       </div>
-      <div class="image-wrapper">
-        <img
-          :src="imageSrc"
-          alt="preview"
-          class="image"
-        />
-      </div>
+      <img
+        :src="imageSrc"
+        alt="preview"
+        class="image"
+      />
 
       <div class="card">
         <div
@@ -97,7 +95,6 @@ const copyTitle = () => {
   border-top-left-radius: $mediumRadius;
   border-top-right-radius: $mediumRadius;
   overflow: hidden;
-  max-height: 340px;
 
   &.image {
     width: 100%;
@@ -142,8 +139,8 @@ const copyTitle = () => {
     &-text {
       display: inline;
       word-wrap: break-word;
-      font-family: 'Gilroy';
-      font-weight: 700;
+      color: $textPrimary;
+      font-weight: 600;
       font-size: 20px;
       line-height: 24px;
     }
@@ -152,18 +149,20 @@ const copyTitle = () => {
       cursor: pointer;
       border: none;
       margin: 0;
-      margin-left: 12px;
-      margin-bottom: -5px;
+      margin-left: 8px;
+      margin-bottom: -2px;
     }
   }
 
   &__subtitle {
     font-family: 'Inter';
     word-wrap: break-word;
+    white-space: pre;
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
-    color: $textPrimary;
+
+    color: $textSecondary;
     margin-bottom: 16px;
   }
 }

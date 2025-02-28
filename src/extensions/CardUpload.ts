@@ -1,6 +1,6 @@
 import { Node, mergeAttributes } from '@tiptap/core'
 import { VueNodeViewRenderer } from '@tiptap/vue-3'
-import CardUpload from '~/components/Tiptap/CardUpload.vue'
+import CardUpload from '~/components/Tiptap/Card/CardUpload.vue'
 
 export interface CardUploadAttributes {
   src: string

@@ -104,7 +104,7 @@ onMounted(() => {
         :disabled="loading || !name"
         @click="isUpdateChapter"
       >
-        Редактировать</ButtonComponent
+        Сохранить</ButtonComponent
       >
       <ButtonComponent
         v-else
@@ -131,6 +131,12 @@ onMounted(() => {
   gap: 16px;
   width: 230px;
   margin-top: 20px;
+
+  & button {
+    font-family: 'Inter';
+    font-size: 16px;
+    line-height: 20px;
+  }
 }
 
 .chapter-modal__input {

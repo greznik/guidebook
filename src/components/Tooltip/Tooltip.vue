@@ -46,8 +46,8 @@ const tooltipClasses = computed(() => ({
   opacity: 0;
   transition: opacity 0.4s;
 
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 14px;
+  line-height: 16px;
   color: #ffffff;
   text-align: center;
   padding: 8px 12px;

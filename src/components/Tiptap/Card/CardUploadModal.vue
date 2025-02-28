@@ -17,6 +17,7 @@ const cardDescription = defineModel<string | number>('description', { required: 
 const fileInput = ref<HTMLInputElement | null>(null)
 const titleInputLength = ref<number>(0)
 const subtitleInputLength = ref<number>(0)
+const isNotNewCard = ref<boolean>(false)
 
 const triggerFileInput = () => {
   fileInput.value?.click()
@@ -34,6 +35,10 @@ const checkMaxLength = (e: Event) => {
 onMounted(() => {
   subtitleInputLength.value = String(cardDescription.value).length
   titleInputLength.value = String(cardTitle.value).length
+
+  if (cardTitle.value || cardDescription.value) {
+    isNotNewCard.value = true
+  }
 })
 </script>
 
@@ -119,7 +124,7 @@ onMounted(() => {
         :disabled="!localSrc && isLoading"
         @click="emit('handleLoadCard')"
       >
-        Создать</ButtonComponent
+        {{ isNotNewCard ? 'Сохранить' : 'Создать' }}</ButtonComponent
       >
       <ButtonComponent
         @click="emit('handleModal')"

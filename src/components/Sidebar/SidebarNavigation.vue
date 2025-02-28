@@ -319,7 +319,7 @@ const popupButtons = reactive([
 
   &__subsection-button {
     font-family: 'Inter';
-    font-size: 16px;
+    font-size: 14px;
     line-height: 20px;
     margin-top: 8px;
   }
