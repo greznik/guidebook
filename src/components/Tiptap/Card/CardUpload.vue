@@ -9,9 +9,12 @@ import CardViewerModal from './CardViewerModal.vue'
 interface Props {
   node: {
     attrs: {
-      src: string
+      imageSrc: string
+      fileSrc: string
       title: string
       caption: string
+      imageName: string
+      fileName: string
     }
   }
   updateAttributes: (attrs: Partial<Props['node']['attrs']>) => void
@@ -27,10 +30,13 @@ const showModal = ref<boolean>(false)
 const showViewerModal = ref<boolean>(false)
 const cardTitle = ref<string>('')
 const cardDescription = ref<string>('')
-const localSrc = ref<string>('')
 const reader = ref<FileReader>()
+const localImage = ref<File>()
 const localFile = ref<File>()
 const isLoading = ref<boolean>(false)
+
+const caption = ref(props.node.attrs.caption || '')
+const title = ref(props.node.attrs.title || '')
 
 const handleModal = () => {
   showModal.value = !showModal.value
@@ -52,14 +58,28 @@ const handleEnter = () => {
 const handleLoadCard = async () => {
   const route = useRoute()
   isLoading.value = true
+  if (localImage.value) {
+    const result = (await uploadFile(localImage.value, route.query.tab as string)) as any
+    const url = result?.body?.url
+
+    if (typeof url === 'string') {
+      props.updateAttributes({
+        imageSrc: url,
+      })
+    } else {
+      useNuxtApp().$toast.error('Не удалось загрузить картинку')
+    }
+  }
   if (localFile.value) {
     const result = (await uploadFile(localFile.value, route.query.tab as string)) as any
     const url = result?.body?.url
 
     if (typeof url === 'string') {
       props.updateAttributes({
-        src: url,
+        imageSrc: url,
       })
+    } else {
+      useNuxtApp().$toast.error('Не удалось загрузить файл')
     }
   }
 
@@ -73,19 +93,41 @@ const handleLoadCard = async () => {
   // handleEnter()
 }
 
-const caption = ref(props.node.attrs.caption || '')
-const title = ref(props.node.attrs.title || '')
-
-const handleFileUpload = (event: Event) => {
+const handleImageUpload = (event: Event) => {
   const target = event.target as HTMLInputElement
-  localFile.value = target.files?.[0]
-  if (localFile.value) {
+  localImage.value = target.files?.[0]
+  if (localImage.value) {
+    props.updateAttributes({
+      imageName: localImage.value.name,
+    })
     // props.editor.chain().focus().setImage({ src: url }).run();
     reader.value = new FileReader()
     reader.value.onload = (e) => {
       const result = e.target?.result
       if (typeof result === 'string') {
-        localSrc.value = result
+        props.updateAttributes({
+          imageSrc: result,
+        })
+      }
+    }
+    reader.value.readAsDataURL(localImage.value)
+  }
+}
+
+const handleFileUpload = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  localFile.value = target.files?.[0]
+  if (localFile.value) {
+    props.updateAttributes({
+      fileName: localFile.value.name,
+    })
+    reader.value = new FileReader()
+    reader.value.onload = (e) => {
+      const result = e.target?.result
+      if (typeof result === 'string') {
+        props.updateAttributes({
+          fileSrc: result,
+        })
       }
     }
     reader.value.readAsDataURL(localFile.value)
@@ -95,19 +137,31 @@ const handleFileUpload = (event: Event) => {
 const editCardHandle = () => {
   cardDescription.value = props.node.attrs.caption
   cardTitle.value = props.node.attrs.title
-  localSrc.value = props.node.attrs.src
   handleModal()
 }
 
 const removeImage = () => {
-  localSrc.value = ''
+  props.updateAttributes({
+    imageSrc: '',
+    imageName: '',
+  })
+}
+
+const removeFile = () => {
+  props.updateAttributes({
+    fileSrc: '',
+    fileName: '',
+  })
 }
 
 const removeCard = () => {
   props.updateAttributes({
-    src: '',
+    imageSrc: '',
+    fileSrc: '',
     title: '',
     caption: '',
+    imageName: '',
+    fileName: '',
   })
   caption.value = ''
   title.value = ''
@@ -150,7 +204,7 @@ onMounted(() => {
       <Transition name="fade">
         <CardViewerModal
           v-if="showViewerModal"
-          :imageSrc="node.attrs.src"
+          :imageSrc="node.attrs.imageSrc"
           :title="node.attrs.title"
           :subtitle="node.attrs.caption"
           @handleModal="handleViewerModal"
@@ -162,36 +216,33 @@ onMounted(() => {
           v-if="showModal"
           v-model:title="cardTitle"
           v-model:description="cardDescription"
-          :localSrc="localSrc"
+          :imageSrc="node.attrs.imageSrc"
+          :imageName="node.attrs.imageName"
+          :fileSrc="node.attrs.fileSrc"
+          :fileName="node.attrs.fileName"
           :isLoading="isLoading"
           @removeImage="removeImage"
+          @removeFile="removeFile"
+          @handleImageUpload="handleImageUpload"
           @handleFileUpload="handleFileUpload"
           @handleLoadCard="handleLoadCard"
           @handleModal="handleModal"
         />
       </Transition>
     </Teleport>
-
-    <ButtonComponent
-      outline
-      @click="handleOpenCard"
-      v-if="!node.attrs.src"
-      class="card-upload__button_add"
-      >Создать карточку</ButtonComponent
-    >
     <div
       class="card"
       @click.prevent="handleViewerModal"
-      v-else
+      v-if="node.attrs.imageSrc && node.attrs.title"
     >
       <div class="card__header">
         <a
           class="card__header-button"
-          :href="node.attrs.src"
-          :download="node.attrs.src"
+          :href="node.attrs.imageSrc"
+          :download="node.attrs.imageSrc"
           target="_blank"
           @click.stop=""
-          v-if="node.attrs.src"
+          v-if="node.attrs.imageSrc"
         >
           <img
             src="~/assets/svg/cardDownload.svg"
@@ -221,7 +272,7 @@ onMounted(() => {
       </div>
       <div class="image-wrapper">
         <img
-          :src="node.attrs.src"
+          :src="node.attrs.imageSrc"
           alt="file"
           class="card__image"
         />
@@ -243,8 +294,31 @@ onMounted(() => {
           class="card__subtitle"
           v-html="caption"
         ></p>
+        <a
+          v-if="node.attrs.fileSrc"
+          class="card__download-link"
+          :href="node.attrs.fileSrc"
+          :download="node.attrs.fileSrc"
+          target="_blank"
+          @click.stop=""
+        >
+          <img
+            class="card__download-link_icon"
+            src="~/assets/svg/cardDownload.svg"
+            alt=""
+          />
+          <span>Скачать</span>
+        </a>
       </div>
     </div>
+
+    <ButtonComponent
+      outline
+      v-else
+      @click="handleOpenCard"
+      class="card-upload__button_add"
+      >Создать карточку</ButtonComponent
+    >
   </node-view-wrapper>
 </template>
 
@@ -356,7 +430,7 @@ onMounted(() => {
 
 .card {
   position: relative;
-  background-color: $cardBg;
+  background-color: $bgWhite;
   max-width: 400px;
   border-radius: $smallRadius;
   box-shadow: 0px 0px 8px 0px #0101011a;
@@ -415,10 +489,11 @@ onMounted(() => {
   &__title {
     margin-bottom: 8px;
     &-text {
+      font-family: 'Inter';
       display: inline;
       color: $textPrimary;
       font-weight: 600;
-      font-size: 20px;
+      font-size: 16px;
       line-height: 24px;
     }
 
@@ -436,7 +511,7 @@ onMounted(() => {
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
-    
+
     display: -webkit-box;
     white-space: pre;
     -webkit-line-clamp: 5;
@@ -449,15 +524,17 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    background-color: $textPrimary;
+    border: 1px solid #6B7280;
+    border-radius: $ultraSmallRadius;
+    background-color: opacity;
     padding: 8px 16px;
     border-radius: $smallRadius;
     width: fit-content;
     height: fit-content;
+    margin-top: 16px;
 
     & span {
-      color: $bgWhite;
+      color: $textPrimary;
     }
 
     &_icon {

@@ -327,15 +327,4 @@ onMounted(() => {
   box-shadow: 0px 0px 20px 0px #0101011a;
   box-shadow: 0px 8px 12px 0px #01010133;
 }
-
-.ProseMirror-selectednode .card {
-  box-shadow: 0px 0px 20px 0px #0101011a;
-  box-shadow: 0px 8px 12px 0px #01010133;
-}
-
-.ProseMirror-selectednode .file-upload {
-  box-shadow: 0px 0px 8px 0px #0101011a;
-  box-shadow: 0px 2px 4px 0px #01010133;
-  border-radius: 8px;
-}
 </style>

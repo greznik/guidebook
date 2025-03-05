@@ -69,7 +69,7 @@ const copyTitle = () => {
 <style lang="scss" scoped>
 .card-viewer {
   position: relative;
-  background: $bgGrey;
+  background: $bgWhite;
   border-radius: $mediumRadius;
   z-index: 999;
   width: 100%;

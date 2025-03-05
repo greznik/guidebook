@@ -79,7 +79,7 @@ storeToken(useCookie('token'))
 }
 
 .Toastify__progress-bar {
-  display: none;
+  visibility: hidden;
 }
 
 .fade-enter-active,

@@ -5,20 +5,34 @@ import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
 
 import { MAX_EDITOR_CARD_TITLE_SYMBOLS, MAX_EDITOR_CARD_SUBTITLE_SYMBOLS } from '~/constants'
 
-const emit = defineEmits(['handleModal', 'handleFileUpload', 'handleLoadCard', 'removeImage'])
-defineProps<{
+const emit = defineEmits([
+  'handleModal',
+  'handleImageUpload',
+  'handleFileUpload',
+  'handleLoadCard',
+  'removeImage',
+  'removeFile',
+])
+const props = defineProps<{
   isLoading: boolean
-  localSrc: string
+  imageSrc: string
+  imageName: string
+  fileSrc: string
+  fileName: string
 }>()
 
 const cardTitle = defineModel<string | number>('title', { required: true })
 const cardDescription = defineModel<string | number>('description', { required: true })
 
+const imageInput = ref<HTMLInputElement | null>(null)
 const fileInput = ref<HTMLInputElement | null>(null)
 const titleInputLength = ref<number>(0)
 const subtitleInputLength = ref<number>(0)
 const isNotNewCard = ref<boolean>(false)
 
+const triggerImageInput = () => {
+  imageInput.value?.click()
+}
 const triggerFileInput = () => {
   fileInput.value?.click()
 }
@@ -50,27 +64,81 @@ onMounted(() => {
     <input
       type="file"
       accept="image/*"
+      @change="emit('handleImageUpload', $event)"
+      ref="imageInput"
+      class="card-upload__input"
+    />
+    <input
+      type="file"
+      accept="image/*"
       @change="emit('handleFileUpload', $event)"
       ref="fileInput"
       class="card-upload__input"
     />
-    <div
-      v-if="!localSrc"
-      class="card-upload__placeholder"
-    >
+    <div class="card-upload__placeholder">
       <button
-        @click="triggerFileInput"
+        @click.prevent="triggerImageInput"
         class="card-upload__button"
       >
-        <img
-          src="~/assets/svg/folderLoad.svg"
-          alt="fileLoad"
-          class="card-upload__icon"
-        />
-        <span class="card-upload__text">Добавить изображение</span>
+        <template v-if="!imageSrc">
+          <img
+            src="~/assets/svg/folderLoad.svg"
+            alt="fileLoad"
+            class="card-upload__icon"
+          />
+          <span class="card-upload__text">Добавить изображение*</span>
+        </template>
+        <template v-else>
+          <img
+            :src="imageSrc"
+            :alt="imageSrc"
+            class="card-upload__preview"
+          />
+          <span class="card-upload__text">{{ imageName }}</span>
+
+          <button
+            class="card-upload__remove"
+            @click.stop="emit('removeImage')"
+          >
+            <img
+              src="~/assets/svg/closeLarge.svg"
+              alt="delete image"
+            />
+          </button>
+        </template>
+      </button>
+      <button
+        @click.prevent="triggerFileInput"
+        class="card-upload__button"
+      >
+        <template v-if="!fileSrc">
+          <img
+            src="~/assets/svg/folderLoad.svg"
+            alt="fileLoad"
+            class="card-upload__icon"
+          />
+          <span class="card-upload__text">Добавить Файл</span>
+        </template>
+        <template v-else>
+          <Icon
+            name="bx:file"
+            class="card-upload__icon"
+          />
+          <span class="card-upload__text">{{ fileName }}</span>
+
+          <button
+            class="card-upload__remove"
+            @click.stop="emit('removeFile')"
+          >
+            <img
+              src="~/assets/svg/closeLarge.svg"
+              alt="delete image"
+            />
+          </button>
+        </template>
       </button>
     </div>
-    <div
+    <!-- <div
       v-else
       class="image-block"
     >
@@ -90,7 +158,7 @@ onMounted(() => {
           class="image-wrapper__image"
         />
       </div>
-    </div>
+    </div> -->
     <div class="card-upload__inputs">
       <CustomInput
         class="card-upload__info"
@@ -98,7 +166,7 @@ onMounted(() => {
         inputOnly
         type="text"
         v-model="cardTitle"
-        placeholder="Название"
+        placeholder="Название*"
         @inputChange="checkMaxLength"
         :maxLength="MAX_EDITOR_CARD_TITLE_SYMBOLS"
       />
@@ -121,7 +189,7 @@ onMounted(() => {
     </div>
     <div class="card-upload__buttons">
       <ButtonComponent
-        :disabled="!localSrc && isLoading"
+        :disabled="!imageSrc || isLoading || !cardTitle"
         @click="emit('handleLoadCard')"
       >
         {{ isNotNewCard ? 'Сохранить' : 'Создать' }}</ButtonComponent
@@ -149,6 +217,9 @@ onMounted(() => {
   }
 
   &__placeholder {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
     margin-bottom: 24px;
   }
 
@@ -165,6 +236,10 @@ onMounted(() => {
 
   &__inputs {
     position: relative;
+  }
+
+  &__remove {
+    margin-left: auto;
   }
 
   &__buttons {
@@ -213,13 +288,22 @@ onMounted(() => {
 
   &__icon {
     margin-right: 16px;
-
+    height: 24px;
+    width: 24px;
     color: $textPrimary;
+  }
+
+  &__preview {
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
   }
 
   &__text {
     color: $textPrimary;
-    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 20px;
+    font-size: 16px;
   }
 
   &__block {
