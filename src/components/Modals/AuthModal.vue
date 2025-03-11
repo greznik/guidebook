@@ -114,6 +114,10 @@ const { value, errorMessage, meta } = useField(() => 'login')
 
 .buttons {
   margin-top: 32px;
+
+  & button {
+    font-size: 16px;
+  }
 }
 
 .password-input {

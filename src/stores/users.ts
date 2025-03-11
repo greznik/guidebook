@@ -10,12 +10,25 @@ export interface ICreateUserBody {
   role: number
 }
 
+export interface IProfileUserBody {
+  id: string
+  login: string
+  name: string
+  role: ROLES
+}
+
 export interface IUpdateUserBody {
   group_id: string
   login: string
   name: string
   password: string
   role: number
+}
+
+export interface IPatchUpdateUserBody {
+  login: string
+  name: string
+  password: string
 }
 
 interface IAnswerCreateUser {
@@ -89,6 +102,17 @@ export const useUsersStore = defineStore('users', {
       }
     },
 
+    async patchUpdateUser(data: IPatchUpdateUserBody) {
+      try {
+        await useApiFetch()(`/users/update`, {
+          method: 'PATCH',
+          body: data,
+        })
+      } catch (e) {
+        return false
+      }
+    },
+
     async deleteGuestRights(sourseId: string) {
       try {
         return (await useApiFetch()(`/users/delete?id=${sourseId}`, {
@@ -97,6 +121,14 @@ export const useUsersStore = defineStore('users', {
       } catch (e) {
         return false
       }
+    },
+    async getUserInfo() {
+      try {
+        const result: IRequest<IProfileUserBody> = await useApiFetch()(`/users/info`, {
+          method: 'GET',
+        })
+        return result.body
+      } catch (e) {}
     },
   },
 })

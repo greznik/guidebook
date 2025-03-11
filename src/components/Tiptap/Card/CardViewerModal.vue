@@ -4,6 +4,9 @@ import { onClickOutside } from '@vueuse/core'
 const emit = defineEmits(['handleModal'])
 const props = defineProps<{
   imageSrc: string
+  imageName: string
+  fileSrc: string
+  fileName: string
   title: string | number
   subtitle: string | number
 }>()
@@ -28,6 +31,18 @@ const copyTitle = () => {
     >
       <div class="card-header">
         <div class="card-header__wrapper">
+          <a
+            class="card-header__button"
+            :href="imageSrc"
+            :download="imageName"
+            target="_blank"
+            @click.stop=""
+          >
+            <img
+              src="~/assets/svg/cardDownload.svg"
+              alt=""
+            />
+          </a>
           <button
             class="card-header__button"
             @click="emit('handleModal')"
@@ -39,28 +54,41 @@ const copyTitle = () => {
           </button>
         </div>
       </div>
-      <img
-        :src="imageSrc"
-        alt="preview"
-        class="image"
-      />
+      <div class="image-wrapper">
+        <img
+          :src="imageSrc"
+          alt="preview"
+          class="image"
+        />
+      </div>
 
       <div class="card">
-        <div
-          class="card__title"
-          v-if="title"
-        >
-          <h2 class="card__title-text">{{ title }}</h2>
-          <img
-            @click.self="copyTitle"
-            class="card__title-icon"
-            src="~/assets/svg/cardCopyButton.svg"
-            alt="copy image"
-          />
+        <div class="card-scroll__wrapper">
+          <div
+            class="card__title"
+            v-if="title"
+          >
+            <h2 class="card__title-text">{{ title }}</h2>
+          </div>
+          <p class="card__subtitle">
+            {{ subtitle }}
+          </p>
         </div>
-        <p class="card__subtitle">
-          {{ subtitle }}
-        </p>
+        <a
+          v-if="fileSrc"
+          class="card__download-link"
+          :href="fileSrc"
+          :download="fileName"
+          target="_blank"
+          @click.stop=""
+        >
+          <img
+            class="card__download-link_icon"
+            src="~/assets/svg/cardDownload.svg"
+            alt=""
+          />
+          <span>Скачать</span>
+        </a>
       </div>
     </div>
   </div>
@@ -100,14 +128,20 @@ const copyTitle = () => {
     width: 100%;
     height: auto;
     object-fit: cover;
+    display: block;
   }
 }
 
 .card {
   position: relative;
   padding: 24px;
-  overflow-y: auto;
-  max-height: 400px;
+  padding-right: 0;
+
+  &-scroll__wrapper {
+    max-height: 170px;
+    padding-right: 24px;
+    overflow-y: auto;
+  }
 
   &-header {
     position: absolute;
@@ -117,6 +151,8 @@ const copyTitle = () => {
     gap: 8px;
 
     &__wrapper {
+      display: flex;
+      gap: 8px;
       margin-left: auto;
       width: fit-content;
       margin-top: 8px;
@@ -129,8 +165,13 @@ const copyTitle = () => {
       justify-content: center;
       border: 1px solid $disabledPrimary;
       border-radius: $smallRadius;
-      background-color: $bgWhite;
+      background-color: $white;
       padding: 8px;
+
+      & img {
+        border: none;
+        margin: 0;
+      }
     }
   }
 
@@ -154,16 +195,36 @@ const copyTitle = () => {
     }
   }
 
+  &__download-link {
+    display: inline-flex;
+    justify-content: center;
+    gap: 8px;
+    font-size: 16px;
+    line-height: 20px;
+    color: $textPrimary;
+    padding: 8px 16px;
+    border: 1px solid $borderButton;
+    border-radius: $smallRadius;
+    margin-top: 20px;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
   &__subtitle {
     font-family: 'Inter';
     word-wrap: break-word;
-    white-space: pre;
+    white-space: break-spaces;
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
 
     color: $textSecondary;
-    margin-bottom: 16px;
   }
+}
+
+.image-wrapper {
+  max-height: 50vh;
 }
 </style>

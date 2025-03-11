@@ -17,6 +17,7 @@ const props = defineProps({
 })
 
 const { value, errorMessage, meta } = useField(() => props.name)
+
 watch(
   () => errorMessage.value,
   (newValue) => {
@@ -91,7 +92,7 @@ watch(
 }
 .textarea {
   border-radius: $smallRadius;
-  padding: 10px 20px;
+  padding: 10px 12px;
   font-size: 16px;
   font-family: 'Inter';
   background-color: $greyNeutral;
@@ -131,8 +132,10 @@ watch(
 //   border: 1px solid green !important;
 // }
 label {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
+  line-height: 14px;
+  color: $textSecondary;
+  margin-bottom: 4px;
 }
 
 input[type='search']::-webkit-search-cancel-button {

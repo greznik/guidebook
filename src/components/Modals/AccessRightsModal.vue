@@ -44,19 +44,23 @@ const saveRights = async () => {
 
 const setCheckedItems = () => {
   checkedUsers.value = rightsData.value.groups.map((g, i) => {
-    return g.users
+    if (g.users) {
+      return g.users
       .map((u, ind) => {
         if (u.pass) {
           return u.user_id
         }
       })
       .filter(Boolean)
+    } else {
+      return []
+    }
   })
 }
 
 const toggleGroup = ($event: Event, index: number, group: IRightsDataGroups) => {
   checkedUsers.value[index] = []
-  if (($event.target as HTMLInputElement).checked) {
+  if (($event.target as HTMLInputElement).checked && group.users.length) {
     group.users.forEach((user: any, ind) => {
       checkedUsers.value[index].push(user.user_id)
     })
@@ -76,7 +80,7 @@ const toggleAll = ($event: Event) => {
 
 const isAllChecked = computed(() => {
   return checkedUsers.value.every((item: string[], index: number) => {
-    return item.length === rightsData.value.groups[index].users.length
+    return item.length === rightsData.value.groups[index].users?.length
   })
 })
 
@@ -108,43 +112,49 @@ onMounted(() => {
           >Доступен всем заказчикам</CustomCheckbox
         >
       </div>
-      <details
-        class="access__details"
+      <template
         v-for="(group, index) in rightsData.groups"
         :key="group.group_id"
       >
-        <summary class="access__summary">
-          <img
-            class="access__summary-image"
-            src="~/assets/svg/chevronDown.svg"
-            alt=""
-          />
-          <CustomCheckbox
-            :id="group.group_id"
-            :disabled="rightsData.guest"
-            @handleChange="toggleGroup($event, index, group)"
-            :checked="checkedUsers?.[index]?.length === group.users.length"
-            :indeterminate="checkedUsers?.[index]?.length < group.users.length && checkedUsers?.[index]?.length !== 0"
-          />
-          <p>{{ group.name }}</p>
-        </summary>
-        <div class="access__checkbox-list">
-          <div
-            class="access__checkbox"
-            v-for="user in group.users"
-            :key="user.user_id"
-          >
+        <details
+          class="access__details"
+          v-if="group.users"
+        >
+          <summary class="access__summary">
+            <img
+              class="access__summary-image"
+              src="~/assets/svg/chevronDown.svg"
+              alt=""
+            />
             <CustomCheckbox
-              v-model="checkedUsers[index]"
-              :value="user.user_id"
-              :id="user.user_id"
-              :checked="user.pass"
+              :id="group.group_id"
               :disabled="rightsData.guest"
-              >{{ user.user_name }}</CustomCheckbox
+              @handleChange="toggleGroup($event, index, group)"
+              :checked="checkedUsers?.[index]?.length === group.users?.length"
+              :indeterminate="
+                checkedUsers?.[index]?.length < group.users?.length && checkedUsers?.[index]?.length !== 0
+              "
+            />
+            <p>{{ group.name }}</p>
+          </summary>
+          <div class="access__checkbox-list" v-if="group.users">
+            <div
+              class="access__checkbox"
+              v-for="user in group.users"
+              :key="user.user_id"
             >
+              <CustomCheckbox
+                v-model="checkedUsers[index]"
+                :value="user.user_id"
+                :id="user.user_id"
+                :checked="user.pass"
+                :disabled="rightsData.guest"
+                >{{ user.user_name }}</CustomCheckbox
+              >
+            </div>
           </div>
-        </div>
-      </details>
+        </details>
+      </template>
     </div>
     <div class="footer">
       <ButtonComponent
@@ -170,7 +180,7 @@ onMounted(() => {
   bottom: 0;
   right: 0;
   width: -webkit-fill-available;
-  background-color: $bgWhite;
+  background-color: $white;
   padding: 16px 24px;
   display: flex;
   align-items: center;
@@ -183,6 +193,7 @@ onMounted(() => {
 
   &__button {
     width: auto;
+    font-size: 16px;
   }
 }
 
@@ -202,7 +213,7 @@ onMounted(() => {
     right: 60px;
     z-index: 3;
     font-family: 'Inter';
-    font-weight: 600;
+    font-weight: 400;
     font-size: 14px;
   }
 

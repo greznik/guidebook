@@ -16,12 +16,8 @@ export const useAuthStore = defineStore('auth', {
     userToken: useCookie('token'),
   }),
   getters: {
-    getDecodeToken: (state) => {
-      if (state.userToken) {
-        return jwtDecode(state.userToken)
-      } else {
-        return {}
-      }
+    getDecodeToken: (state): IDecodeUser => {
+      return jwtDecode(state.userToken)
     },
     hasEditable: (state) => {
       if (state.userToken) {
@@ -35,9 +31,13 @@ export const useAuthStore = defineStore('auth', {
   actions: {
     storeToken(token: any) {
       this.userToken = token
-      const newCookie = useCookie('token')
+      const newCookie = useCookie('token', {
+        maxAge: 60 * 60 * 24, // 1 day
+        secure: true,
+        httpOnly: true,
+      })
       newCookie.value = this.userToken
-      refreshCookie('token')
+      // refreshCookie('token')
     },
 
     clearAuth() {

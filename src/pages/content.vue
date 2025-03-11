@@ -177,6 +177,7 @@ const deleteGroupHandle = async () => {
           </button>
         </template>
       </HeaderComponent>
+      <h2 class="content-block__item-name">{{ selectedItem.name }}</h2>
       <div class="content-block-wrapper">
         <div class="content-block__info">
           <NuxtLink
@@ -231,6 +232,24 @@ const deleteGroupHandle = async () => {
   padding: 16px 40px;
   background-color: $greyNeutral;
 
+  @media screen and (max-width: $medium) {
+    padding: 16px;
+    height: 130px;
+    background-color: $white;
+  }
+
+  &__item-name {
+    display: none;
+
+    @media screen and (max-width: $big) {
+      display: inline-block;
+    }
+    
+    @media screen and (max-width: $medium) {
+      margin-top: 50px;
+    }
+  }
+
   &-top {
     display: inline-flex;
     justify-content: space-between;
@@ -259,6 +278,10 @@ const deleteGroupHandle = async () => {
   &__copy-button {
     width: fit-content;
     padding: 8px;
+
+    @media screen and (max-width: $medium) {
+      border: none;
+    }
   }
 
   &__burger {
@@ -266,6 +289,17 @@ const deleteGroupHandle = async () => {
     justify-content: flex-start;
     align-items: center;
     gap: 8px;
+
+    @media screen and (max-width: $medium) {
+      margin-left: 16px;
+    }
+
+    &-image {
+      display: block;
+      @media screen and (max-width: $medium) {
+        display: none;
+      }
+    }
 
     &-arrow {
       transform: rotate(90deg);
@@ -276,6 +310,14 @@ const deleteGroupHandle = async () => {
       font-size: 20px;
       line-height: 24px;
       font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden !important;
+      text-overflow: ellipsis;
+
+      @media screen and (max-width: $medium) {
+        font-size: 16px;
+        line-height: 20px;
+      }
     }
 
     @media screen and (max-width: $big) {
@@ -297,6 +339,12 @@ const deleteGroupHandle = async () => {
       align-items: center;
       gap: 8px;
       height: 40px;
+
+      @media screen and (max-width: $medium) {
+        position: absolute;
+        right: 16px;
+        top: 4px;
+      }
     }
   }
 
@@ -309,6 +357,10 @@ const deleteGroupHandle = async () => {
     flex-direction: row;
     justify-content: space-between;
     gap: 24px;
+
+    @media screen and (max-width: $medium) {
+      left: 16px;
+    }
   }
 
   &__tab {

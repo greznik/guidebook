@@ -70,7 +70,7 @@ onMounted(() => {
     />
     <input
       type="file"
-      accept="image/*"
+      multiple
       @change="emit('handleFileUpload', $event)"
       ref="fileInput"
       class="card-upload__input"
@@ -117,7 +117,7 @@ onMounted(() => {
             alt="fileLoad"
             class="card-upload__icon"
           />
-          <span class="card-upload__text">Добавить Файл</span>
+          <span class="card-upload__text">Добавить файл</span>
         </template>
         <template v-else>
           <Icon
@@ -265,7 +265,7 @@ onMounted(() => {
     line-height: 14px;
 
     &.textarea {
-      top: 120px;
+      top: 128px;
     }
   }
 
@@ -275,6 +275,7 @@ onMounted(() => {
     justify-content: flex-start;
     background-color: $fileCardInput;
     font-weight: 700;
+    max-height: 72px;
     font-family: 'Inter';
     padding: 24px;
     border-radius: $smallRadius;
@@ -304,6 +305,10 @@ onMounted(() => {
     font-weight: 600;
     line-height: 20px;
     font-size: 16px;
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
   }
 
   &__block {

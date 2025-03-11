@@ -76,7 +76,7 @@ const handleLoadCard = async () => {
 
     if (typeof url === 'string') {
       props.updateAttributes({
-        imageSrc: url,
+        fileSrc: url,
       })
     } else {
       useNuxtApp().$toast.error('Не удалось загрузить файл')
@@ -205,6 +205,9 @@ onMounted(() => {
         <CardViewerModal
           v-if="showViewerModal"
           :imageSrc="node.attrs.imageSrc"
+          :imageName="node.attrs.imageName"
+          :fileSrc="node.attrs.fileSrc"
+          :fileName="node.attrs.fileName"
           :title="node.attrs.title"
           :subtitle="node.attrs.caption"
           @handleModal="handleViewerModal"
@@ -236,19 +239,6 @@ onMounted(() => {
       v-if="node.attrs.imageSrc && node.attrs.title"
     >
       <div class="card__header">
-        <a
-          class="card__header-button"
-          :href="node.attrs.imageSrc"
-          :download="node.attrs.imageSrc"
-          target="_blank"
-          @click.stop=""
-          v-if="node.attrs.imageSrc"
-        >
-          <img
-            src="~/assets/svg/cardDownload.svg"
-            alt=""
-          />
-        </a>
         <template v-if="hasEditable">
           <button
             class="card__header-button"
@@ -278,27 +268,18 @@ onMounted(() => {
         />
       </div>
       <div class="card__wrapper">
-        <div
-          class="card__title"
-          v-if="title"
-        >
-          <h2 class="card__title-text">{{ title }}</h2>
-          <img
-            @click.stop="copyTitle"
-            class="card__title-icon"
-            src="~/assets/svg/cardCopyButton.svg"
-            alt="copy image"
-          />
-        </div>
+        <h2 class="card__title">{{ title }}</h2>
         <p
+          v-if="caption"
           class="card__subtitle"
           v-html="caption"
         ></p>
+
         <a
           v-if="node.attrs.fileSrc"
           class="card__download-link"
           :href="node.attrs.fileSrc"
-          :download="node.attrs.fileSrc"
+          :download="node.attrs.fileName"
           target="_blank"
           @click.stop=""
         >
@@ -409,7 +390,6 @@ onMounted(() => {
 
   &__text {
     color: $textPrimary;
-    font-size: 0.875rem;
   }
 
   &__block {
@@ -433,8 +413,6 @@ onMounted(() => {
   background-color: $bgWhite;
   max-width: 400px;
   border-radius: $smallRadius;
-  box-shadow: 0px 0px 8px 0px #0101011a;
-  box-shadow: 0px 2px 4px 0px #01010133;
   transition: box-shadow 0.2s ease;
   cursor: pointer;
 
@@ -479,23 +457,22 @@ onMounted(() => {
     border: none;
     border-top-left-radius: $smallRadius;
     border-top-right-radius: $smallRadius;
+    display: block;
   }
 
   &__wrapper {
+    display: flex;
+    flex-direction: column;
     margin: 16px;
-    margin-top: 6px;
   }
 
   &__title {
-    margin-bottom: 8px;
-    &-text {
-      font-family: 'Inter';
-      display: inline;
-      color: $textPrimary;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 24px;
-    }
+    font-family: 'Inter';
+    display: inline;
+    color: $textPrimary;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
 
     &-icon {
       cursor: pointer;
@@ -511,9 +488,10 @@ onMounted(() => {
     font-weight: 400;
     font-size: 16px;
     line-height: 20px;
+    margin-top: 8px;
 
     display: -webkit-box;
-    white-space: pre;
+    white-space: break-spaces;
     -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     overflow: hidden;
@@ -524,10 +502,10 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #6B7280;
+    border: 1px solid #6b7280;
     border-radius: $ultraSmallRadius;
-    background-color: opacity;
     padding: 8px 16px;
+    font-size: 16px;
     border-radius: $smallRadius;
     width: fit-content;
     height: fit-content;

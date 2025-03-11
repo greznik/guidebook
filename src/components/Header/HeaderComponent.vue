@@ -68,6 +68,20 @@ const logoutUser = () => {
   &.isContent {
     height: auto;
     margin-bottom: 44px;
+
+    @media screen and (max-width: $big) {
+     margin-bottom: 24px;
+    }
+
+    @media screen and (max-width: $medium) {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 48px;
+      border-bottom: 1px solid #d1d5db;
+      background-color: #FFFFFF;
+      margin-bottom: 0;
+    }
   }
 
   &__logo {

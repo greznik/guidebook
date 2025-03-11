@@ -31,7 +31,7 @@ onMounted(() => {
     <div class="file-upload__wrapper">
       <img
         class="file-upload__icon"
-        src="~/assets/svg/loadDocument.svg"
+        src="~/assets/svg/cardDownload.svg"
         alt="load"
       />
       <a

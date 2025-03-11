@@ -1,15 +1,20 @@
 <script setup lang="ts">
-import { ROLES } from '~/constants';
+import { ROLES } from '~/constants'
 
 const props = defineProps<{
   item: any
   card: any
 }>()
 
-const emit = defineEmits(['selectItem', 'selectDeletingItem'])
+const emit = defineEmits(['selectItem', 'selectDeletingItem', 'closeSidebar'])
 
 const { hasEditable } = storeToRefs(useAuthStore())
 const route = useRoute()
+
+const handleClickLink = (item: any) => {
+  emit('closeSidebar')
+  selectItem(item)
+}
 
 const selectItem = async (item: any) => {
   await navigateTo({
@@ -48,22 +53,20 @@ watch(
   <div
     class="navigation__list-buttons"
     :class="{ active: item.id === route.query.seed }"
+    @click.prevent="handleClickLink(item)"
   >
-    <button
-      class="navigation__list-link"
-      @click="selectItem(item)"
-    >
+    <div class="navigation__list-link">
       <img
         :class="{ hidden: true }"
         src="~/assets/svg/dragVerticalDots.svg"
         alt=""
       />
       <p class="navigation__list-text">{{ item.name }}</p>
-    </button>
+    </div>
     <button
       v-if="hasEditable && route.name === 'content' && card.seeds.length > 1"
       class="navigation__list-delete"
-      @click="choiseDeleteItem(item)"
+      @click.stop="choiseDeleteItem(item)"
     >
       <img
         src="~/assets/svg/deleteTrash.svg"
@@ -83,6 +86,7 @@ watch(
     transition: background-color 0.3s ease;
     padding: 8px;
     margin-bottom: 8px;
+    cursor: pointer;
 
     &:hover {
       background-color: $greyNeutral;

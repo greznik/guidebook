@@ -39,5 +39,9 @@ watch(
   padding: 40px;
   font-size: 18px;
   overflow-y: auto;
+
+  @media screen and (max-width: $medium) {
+    background-color: $white;
+  }
 }
 </style>

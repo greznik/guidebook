@@ -28,6 +28,7 @@ const selectItem = (item: any) => {
     <SidebarNavigation
       :sidebarList="sidebarList"
       @selectItem="selectItem"
+      @closeSidebar="emit('closeSidebar')"
     />
 
     <!-- <div class="sidebar__backdrop"></div> -->

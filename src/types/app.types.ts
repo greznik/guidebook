@@ -1,6 +1,7 @@
 import { Editor } from '@tiptap/core'
 import type { Range } from '@tiptap/core'
 import type { JwtPayload } from 'jwt-decode'
+import type { ROLES } from '~/constants'
 
 export interface ICards {
   id: number
@@ -29,7 +30,7 @@ export interface IDecodeUser extends JwtPayload {
   email: string
   exp: number
   name: string
-  role: number
+  role: ROLES
   uuid: string
 }
 

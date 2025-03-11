@@ -282,7 +282,7 @@ const { value, errorMessage, meta } = useField(() => 'login')
       font-size: 16px;
       line-height: 20px;
       font-weight: 400;
-      padding: 8px;
+      padding: 8px 16px;
     }
   }
 

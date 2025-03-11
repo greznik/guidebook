@@ -155,6 +155,7 @@ onMounted(() => {
 
   &__button {
     width: auto;
+    font-size: 16px;
   }
 
   &__icon {

@@ -156,6 +156,9 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+.editor-container {
+  max-width: 860px;
+}
 .image {
   width: 100%;
   position: relative;
@@ -179,14 +182,6 @@ onMounted(() => {
     &:not(:first-child) {
       margin-top: 32px;
     }
-  }
-
-  h2 {
-    font-size: 20px;
-    font-family: 'Gilroy';
-    font-weight: 700;
-    line-height: 24px;
-    margin-bottom: 12px;
   }
 }
 
@@ -326,5 +321,9 @@ onMounted(() => {
 .ProseMirror-selectednode.editor-image {
   box-shadow: 0px 0px 20px 0px #0101011a;
   box-shadow: 0px 8px 12px 0px #01010133;
+}
+.ProseMirror-selectednode.card-upload {
+  box-shadow: 0px 0px 8px 0px #0101011a;
+  box-shadow: 0px 2px 4px 0px #01010133;
 }
 </style>

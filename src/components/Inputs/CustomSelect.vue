@@ -117,7 +117,6 @@ watch(
   ul {
     width: 100%;
     list-style-type: none;
-    padding: 0 4px;
     margin: 0;
     font-size: 16px;
     line-height: 24px;

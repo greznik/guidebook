@@ -8,9 +8,8 @@ import EditPopupIcon from '~/assets/svg/editPopup.svg'
 import AccessPopupIcon from '~/assets/svg/accessPopup.svg'
 import type { IChapterItem, IGroupItem, ISeedItem } from '~/types/app.types'
 import AccessRightsModal from '../Modals/AccessRightsModal.vue'
-import { ROLES } from '~/constants'
 
-const emit = defineEmits(['selectItem'])
+const emit = defineEmits(['selectItem', 'closeSidebar'])
 
 const { hasEditable } = storeToRefs(useAuthStore())
 const { createSeed } = useSeedsStore()
@@ -200,6 +199,7 @@ const popupButtons = reactive([
             :item="item"
             :card="chapter"
             @selectItem="selectItem"
+            @closeSidebar="emit('closeSidebar')"
             @selectDeletingItem="selectDeletingItem"
           />
           <ButtonComponent

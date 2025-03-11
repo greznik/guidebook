@@ -2,18 +2,23 @@
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '~/stores/auth'
+import { ROLES_NAMES } from '~/constants'
 
 import SmallPopup from '~/components/Modals/SmallPopup.vue'
 import UsersModal from '~/components/Modals/UsersModal.vue'
+import ProfileModal from '~/components/Modals/ProfileModal.vue'
 import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
 import SignOutIcon from '~/assets/svg/signOutIcon.svg'
 import UserPopupIcon from '~/assets/svg/usersPopup.svg'
+import ProfileIcon from '~/assets/svg/profileButton.svg'
 
 const { userToken, getDecodeToken } = storeToRefs(useAuthStore())
 const isShowPoppup = ref(false)
 const isShowUsers = ref(false)
+const isShowProfile = ref(false)
 const poppup = ref(null)
 const authButtonRef = ref()
+const route = useRoute()
 
 const emit = defineEmits(['handleModal', 'logoutUser', 'handleSearch'])
 
@@ -33,13 +38,19 @@ const handleUsersModal = () => {
   isShowUsers.value = !isShowUsers.value
 }
 
+const handleProfileModal = () => {
+  isShowPoppup.value = false
+  isShowProfile.value = !isShowProfile.value
+}
+
 const handlePopup = () => {
   isShowPoppup.value = !isShowPoppup.value
 }
 
 const popupButtons = [
-  { id: 0, name: 'Сотрудники', img: UserPopupIcon, action: handleUsersModal, class: '' },
-  { id: 1, name: 'Выйти', img: SignOutIcon, action: logoutUser, class: 'exit' },
+  { id: 0, name: 'Мой профиль', img: ProfileIcon, action: handleProfileModal, class: '' },
+  { id: 1, name: 'Сотрудники', img: UserPopupIcon, action: handleUsersModal, class: '' },
+  { id: 2, name: 'Выйти', img: SignOutIcon, action: logoutUser, class: 'exit' },
 ]
 </script>
 
@@ -52,8 +63,19 @@ const popupButtons = [
       />
     </Transition>
   </Teleport>
+  <Teleport to="#teleports">
+    <Transition name="fade">
+      <ProfileModal
+        v-if="isShowProfile"
+        @handleModal="handleProfileModal"
+      />
+    </Transition>
+  </Teleport>
 
-  <div class="header__buttons">
+  <div
+    class="header__buttons"
+    :class="{ content: route.name === 'content' }"
+  >
     <Transition name="fade">
       <SmallPopup
         @handlePopup="handlePopup"
@@ -103,7 +125,7 @@ const popupButtons = [
         class="header__button"
         @click="handlePopup"
       >
-        {{ getDecodeToken?.name }}
+        <p class="header__button-name">{{ ROLES_NAMES[getDecodeToken?.role] }}</p>
         <template #icon>
           <img
             class="header__auth-icon"
@@ -127,12 +149,25 @@ const popupButtons = [
     gap: 24px;
     width: fit-content;
     margin-left: auto;
+
+    &.content {
+      @media screen and (max-width: $medium) {
+        display: none;
+      }
+    }
   }
 
   &__button {
     font-family: 'Inter';
     font-size: 16px;
     line-height: 20px;
+
+    &-name {
+      max-width: 150px;
+      white-space: nowrap;
+      overflow: hidden !important;
+      text-overflow: ellipsis;
+    }
   }
 
   &__search {
