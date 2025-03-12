@@ -18,11 +18,11 @@ export interface IProfileUserBody {
 }
 
 export interface IUpdateUserBody {
-  group_id: string
-  login: string
-  name: string
-  password: string
-  role: number
+  group_id?: string
+  login?: string
+  name?: string
+  password?: string
+  role?: number
 }
 
 export interface IPatchUpdateUserBody {

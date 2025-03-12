@@ -14,16 +14,14 @@ const emit = defineEmits(['handleModal'])
 
 const loading = ref(false)
 const { loginUser } = useAuthStore()
-const { getItemsTree } = useTreeStore()
 
 const schema = object().shape({
   // email: string().email().required(),
-  // password: string()
-  // .required('No password provided.')
-  // .min(8, 'Password is too short - should be 8 chars minimum.')
-  // .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+  password: string()
+    .required()
+    .min(8, 'Пароль должен содержать минимум 8 символов')
+    .matches(/[a-zA-Z]/, 'Допустимы только латинские буквы'),
   login: string(),
-  password: string(),
 })
 
 const user = ref({

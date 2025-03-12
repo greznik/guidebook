@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { ROLES } from '~/constants'
 import MainCard from '~/components/MainCard.vue'
 import Footer from '~/components/Footer/FooterComponent.vue'
 import Sidebar from '~/components/Sidebar/Sidebar.vue'

@@ -114,6 +114,7 @@ withDefaults(defineProps<IButton>(), {
 
     &:hover {
       background-color: transparent;
+      border: 1px solid $textPrimary;
     }
   }
 

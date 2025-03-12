@@ -1,67 +1,49 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { Form, useField } from 'vee-validate'
+import { getSubmitFn } from '~/helpers/getSubmitFn'
 import { ROLES_NAMES } from '~/constants'
 
 import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
 import Modal from './Modal.vue'
 import CustomInput from '../Inputs/CustomInput.vue'
+import { object, string, ref as YupRef } from 'yup'
 
 const emit = defineEmits(['handleModal'])
 
 const loading = ref(false)
 const showPassword1 = ref(false)
 const showPassword2 = ref(false)
-const { getDecodeToken } = storeToRefs(useAuthStore())
-const { getUserInfo, patchUpdateUser } = useUsersStore()
+const { getUserInfo, updateUser } = useUsersStore()
 
 const { data: userData } = await useAsyncData('user', getUserInfo)
 
-const user = reactive({
-  name: '',
-  family: '',
+const schema = object().shape({
+  password: string()
+    .min(8, 'Пароль должен содержать минимум 8 символов')
+    .matches(/[a-zA-Z]/, 'Допустимы только латинские буквы'),
+  confirm_password: string().oneOf([YupRef('password')], 'Пароли не совпадают'),
+  name: string().required('Имя должно быть заполнено'),
 })
 
-const password1 = ref('')
-const password2 = ref('')
-
-const handleSubmit = async (values: any) => {
-  loading.value = true
-  try {
-    if (password1 !== password2) {
-      useNuxtApp().$toast.error('Пароли не совпадают')
-      return
-    }
-    const result = await patchUpdateUser(values.login)
-    if (!result) throw new Error()
-
-    useNuxtApp().$toast.success('Успешная авторизация')
-    handleModal()
-  } catch (e) {
-    useNuxtApp().$toast.error('Пользователь не найден')
-  } finally {
-    loading.value = false
-  }
+const initialValues = {
+  name: userData.value?.name,
 }
+
+const onSubmit = getSubmitFn(schema, async (values) => {
+  if (userData.value) {
+    loading.value = true
+    const password = values.password ? values.password : ''
+    const updateData = { name: values.name, password, id: userData.value.id }
+    await updateUser(updateData)
+    loading.value = false
+    handleModal()
+  }
+})
 
 const handleModal = () => {
   emit('handleModal')
 }
-
-const setUserValues = () => {
-  if (userData.value) {
-    const name = userData.value.name.split(/\s+/)
-    user.name = name[0]
-    user.family = name[1]
-  }
-}
-
-onMounted(() => {
-  setUserValues()
-})
-
-const isDisabled = computed(() => {
-  return !user.name
-})
 </script>
 
 <template>
@@ -70,8 +52,10 @@ const isDisabled = computed(() => {
     color="#FFFFFF"
     @handleModal="handleModal"
   >
-    <form
-      @submit="handleSubmit"
+    <Form
+      :validation-schema="schema"
+      :initial-values="initialValues"
+      @submit="onSubmit"
       class="profile"
     >
       <div class="profile__block">
@@ -81,19 +65,9 @@ const isDisabled = computed(() => {
         </div>
         <div class="profile__inputs">
           <CustomInput
-            placeholder="Имя"
-            inputOnly
-            label="Имя"
+            placeholder="Имя и фамилия"
+            label="Имя и фамилия"
             name="name"
-            v-model="user.name"
-            type="text"
-            class="form-input"
-          />
-          <CustomInput
-            placeholder="Фамилия"
-            name="family"
-            v-model="user.family"
-            label="Фамилия"
             type="text"
             class="form-input"
           />
@@ -120,11 +94,9 @@ const isDisabled = computed(() => {
         <div class="profile__inputs">
           <div class="password-input">
             <CustomInput
-              placeholder="Не менее 6 символов"
+              placeholder="Не менее 8 символов"
               label="Новый пароль"
-              name="password1"
-              inputOnly
-              v-model="password1"
+              name="password"
               :type="showPassword1 ? 'text' : 'password'"
             />
 
@@ -145,11 +117,9 @@ const isDisabled = computed(() => {
           </div>
           <div class="password-input">
             <CustomInput
-              placeholder="Не менее 6 символов"
+              placeholder="Не менее 8 символов"
               label="Повтори пароль"
-              inputOnly
-              name="password2"
-              v-model="password2"
+              name="confirm_password"
               :type="showPassword2 ? 'text' : 'password'"
             />
 
@@ -172,18 +142,25 @@ const isDisabled = computed(() => {
       </div>
       <div class="buttons">
         <ButtonComponent
-          :disabled="isDisabled"
+          :disabled="loading"
           type="submit"
           class="profile__button"
           >Сохранить</ButtonComponent
         >
       </div>
-    </form>
+    </Form>
   </Modal>
 </template>
 
 <style lang="scss" scoped>
 .profile {
+  min-width: 616px;
+  width: 100%;
+
+  @media screen and (max-width: $medium) {
+    min-width: auto;
+  }
+
   &__block {
     margin-bottom: 24px;
 
@@ -241,14 +218,20 @@ const isDisabled = computed(() => {
     justify-content: space-between;
     align-items: center;
     gap: 16px;
+
+    @media screen and (max-width: $medium) {
+      flex-direction: column;
+    }
   }
 
   &__button {
+    font-size: 16px;
     width: auto;
   }
 }
 
 .password-input {
+  width: 100%;
   position: relative;
 }
 

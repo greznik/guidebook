@@ -51,6 +51,10 @@ onClickOutside(modalRef, (event) => emit('handleModal'), { ignore: [closeRef] })
   z-index: 999;
   min-width: 380px;
 
+  @media screen and (max-width: $medium) {
+    min-width: 340px;
+  }
+
   &.search {
     position: fixed;
     top: 0;

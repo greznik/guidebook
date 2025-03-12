@@ -77,7 +77,6 @@ defineExpose({ onKeyDown })
     ref="containerRef"
     class="commands"
   >
-    <div class="commands__title">НАЧАЛЬНЫЕ БЛОКИ</div>
     <button
       v-for="(item, index) in items"
       :key="item.name"

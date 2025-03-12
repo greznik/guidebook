@@ -20,9 +20,9 @@ const { value, errorMessage, meta } = useField(() => props.name)
 
 watch(
   () => errorMessage.value,
-  (newValue) => {
-    if (newValue.includes('password')) {
-      useNuxtApp().$toast.error('Пароль должен содержать минимум 8 символов и латинские буквы')
+  (value) => {
+    if (value) {
+      useNuxtApp().$toast.error(value)
     }
   },
 )

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ButtonComponent from '~/components/Buttons/ButtonComponent.vue'
+import Loader from '~/components/Loader/Loader.vue'
 import { NodeViewWrapper } from '@tiptap/vue-3'
 import type { Editor } from '@tiptap/core'
 import { useUploadStore } from '~/stores/upload'
@@ -23,6 +24,7 @@ const fileInput = ref<HTMLInputElement | null>(null)
 const caption = ref(props.node.attrs.caption || '')
 const altText = ref(props.node.attrs.alt || '')
 const showAltText = ref(false)
+const isImageLoaded = ref(false)
 
 const inputText = computed({
   get: () => (showAltText.value ? altText.value : caption.value),
@@ -34,6 +36,10 @@ const inputText = computed({
     }
   },
 })
+
+const onImageLoad = () => {
+  isImageLoaded.value = true
+}
 
 const handleEnter = () => {
   updateText()
@@ -132,15 +138,26 @@ onMounted(() => {
         outline
         class="image-upload__button"
         @click="triggerFileInput"
-        >Нажмите, чтобы выбрать картинку</ButtonComponent
+        >Выберите картинку</ButtonComponent
       >
     </template>
     <img
       v-else
       :src="node.attrs.src"
       :alt="node.attrs.alt"
+      @load="onImageLoad"
       class="image"
     />
+    <!-- <template v-else>
+      <Loader v-if="!isImageLoaded" />
+      <img
+        v-else
+        :src="node.attrs.src"
+        :alt="node.attrs.alt"
+        @load="onImageLoad"
+        class="image"
+      />
+    </template> -->
   </node-view-wrapper>
 </template>
 

@@ -6,16 +6,16 @@ export const MAX_EDITOR_CARD_SUBTITLE_SYMBOLS = 1000
 export enum ROLES {
   ADMINS,
   MODERATORS,
-  CUSTOMERS,
   EMPLOYEERS,
+  CUSTOMERS,
   GUESTS,
 }
 
 export const ROLES_NAMES = {
   [ROLES.ADMINS]: 'Администратор',
   [ROLES.MODERATORS]: 'Модератор',
-  [ROLES.CUSTOMERS]: 'Заказчик',
   [ROLES.EMPLOYEERS]: 'Сотрудник',
+  [ROLES.CUSTOMERS]: 'Заказчик',
   [ROLES.GUESTS]: 'Гость',
 }
 

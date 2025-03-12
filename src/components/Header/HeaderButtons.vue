@@ -48,9 +48,9 @@ const handlePopup = () => {
 }
 
 const popupButtons = [
-  { id: 0, name: 'Мой профиль', img: ProfileIcon, action: handleProfileModal, class: '' },
-  { id: 1, name: 'Сотрудники', img: UserPopupIcon, action: handleUsersModal, class: '' },
-  { id: 2, name: 'Выйти', img: SignOutIcon, action: logoutUser, class: 'exit' },
+  { id: 0, name: 'Мой профиль', img: ProfileIcon, action: handleProfileModal, class: '', maxRole: 4 },
+  { id: 1, name: 'Сотрудники', img: UserPopupIcon, action: handleUsersModal, class: '', maxRole: 3 },
+  { id: 2, name: 'Выйти', img: SignOutIcon, action: logoutUser, class: 'exit', maxRole: 4 },
 ]
 </script>
 
@@ -81,19 +81,23 @@ const popupButtons = [
         @handlePopup="handlePopup"
         v-if="isShowPoppup"
       >
-        <button
+        <template
           v-for="button in popupButtons"
           :key="button.id"
-          class="header__auth-button"
-          @click="button.action"
-          :class="button.class"
         >
-          <img
-            :src="button.img"
-            alt=""
-          />
-          <p>{{ button.name }}</p>
-        </button>
+          <button
+            v-if="getDecodeToken.role < button.maxRole"
+            class="header__auth-button"
+            @click="button.action"
+            :class="button.class"
+          >
+            <img
+              :src="button.img"
+              alt=""
+            />
+            <p>{{ button.name }}</p>
+          </button>
+        </template>
       </SmallPopup>
     </Transition>
     <button

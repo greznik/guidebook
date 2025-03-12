@@ -246,7 +246,7 @@ const deleteGroupHandle = async () => {
     }
     
     @media screen and (max-width: $medium) {
-      margin-top: 50px;
+      margin-top: 30px;
     }
   }
 
@@ -379,7 +379,6 @@ const deleteGroupHandle = async () => {
   justify-content: space-between;
   align-items: flex-start;
   padding: 24px 32px;
-  height: 104px;
 
   &-link {
     display: flex;

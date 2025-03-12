@@ -267,6 +267,8 @@ const { value, errorMessage, meta } = useField(() => 'login')
   gap: 24px;
   width: clamp(850px, 100vw, 1000px);
   height: 680px;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   &__list {
     display: flex;

@@ -78,7 +78,7 @@ watch(
   .selector {
     height: 40px;
     border-radius: 8px;
-    padding: 0px 20px;
+    padding: 0px 12px;
     font-size: 14px;
     background-color: #f3f4f6;
     border: none;

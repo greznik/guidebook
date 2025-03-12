@@ -14,7 +14,6 @@ import CardUpload from '~/extensions/CardUpload'
 import FileUpload from '~/extensions/FileUpload'
 import Link from '@tiptap/extension-link'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
-import { ROLES } from '~/constants'
 
 const props = defineProps<{
   content: any
@@ -56,11 +55,14 @@ const createDropFileLink = (event: DragEvent) => {
             const url = result?.body?.url
             if (typeof url === 'string') {
               if (validImageTypes.includes(fileType)) {
-                editor.value?.commands.setImage({
-                  src: url,
-                  alt: '',
-                  title: '',
-                })
+                editor.value
+                  ?.chain()
+                  .focus()
+                  .insertContentAt(position.pos, {
+                    type: 'imageUpload',
+                    attrs: { caption: file.size, src: url, alt: file.name },
+                  })
+                  .run()
               } else {
                 editor.value
                   ?.chain()
@@ -85,7 +87,6 @@ const createDropFileLink = (event: DragEvent) => {
 const editor = useEditor({
   content: props.content,
   onDrop: (event, slice, moved) => {
-
     if (slice.content.childCount || moved) {
       return
     }
@@ -104,7 +105,6 @@ const editor = useEditor({
     TextStyle,
     Link,
     Image.configure({
-      inline: true,
       HTMLAttributes: {
         class: 'editor-image',
       },
@@ -146,18 +146,25 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="editor-container">
-    <Toolbar :editor="editor" />
-    <EditorContent
-      :editor="editor"
-      class="prose"
-    />
-  </div>
+  <client-only>
+    <div class="editor-container">
+      <Toolbar :editor="editor" />
+      <EditorContent
+        :editor="editor"
+        class="prose"
+      />
+    </div>
+  </client-only>
 </template>
 
 <style lang="scss">
 .editor-container {
   max-width: 860px;
+  height: 100%;
+}
+.prose {
+  flex: 1;
+  height: 100%;
 }
 .image {
   width: 100%;
@@ -165,6 +172,7 @@ onMounted(() => {
 }
 .tiptap {
   outline: none;
+  height: 100%;
 
   & p {
     line-height: 24px;
@@ -307,6 +315,7 @@ onMounted(() => {
 }
 
 .editor-image {
+  display: inline-block;
   margin-top: 24px;
   margin-bottom: 24px;
   margin-right: 24px;

@@ -7,7 +7,6 @@ import CommandsList from '~/components/Tiptap/CommandList.vue'
 
 interface SuggestionItem {
   name: string
-  description: string
   icon: string
   command: (props: { editor: Editor; range: Range }) => void
 }
@@ -22,7 +21,6 @@ interface SuggestionProps {
 const items: SuggestionItem[] = [
   {
     name: 'Заголовок',
-    description: 'Большой заголовок',
     icon: 'mdi:format-header-2',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).setNode('heading', { level: 2 }).run()
@@ -30,7 +28,6 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Список',
-    description: 'Создай простой список',
     icon: 'mdi:format-list-bulleted',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).toggleBulletList().run()
@@ -38,7 +35,6 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Числовой список',
-    description: 'Создай числовой список',
     icon: 'mdi:format-list-numbered',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).toggleOrderedList().run()
@@ -46,7 +42,6 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Цитата',
-    description: 'Оберни в цитату',
     icon: 'mdi:format-quote-close',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).toggleBlockquote().run()
@@ -54,7 +49,6 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Картинка',
-    description: 'Загрузи картинку',
     icon: 'mdi:image',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).insertContent('<image-upload></image-upload>').run()
@@ -65,7 +59,6 @@ const items: SuggestionItem[] = [
   },
   {
     name: 'Карточка',
-    description: 'Загрузи карточку',
     icon: 'mdi:card',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).insertContent('<card-upload></card-upload>').run()
@@ -75,8 +68,17 @@ const items: SuggestionItem[] = [
     },
   },
   {
+    name: 'Файл',
+    icon: 'mdi:file',
+    command: ({ editor, range }) => {
+      editor.chain().focus().deleteRange(range).insertContent('<file-upload></file-upload>').run()
+
+      editor.commands.setTextSelection(editor.state.selection.to)
+      editor.commands.blur()
+    },
+  },
+  {
     name: 'Разделитель',
-    description: 'Вставь разделитель',
     icon: 'mdi:minus',
     command: ({ editor, range }) => {
       editor.chain().focus().deleteRange(range).setHorizontalRule().run()
