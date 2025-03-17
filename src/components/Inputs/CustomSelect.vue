@@ -1,10 +1,15 @@
 <script setup lang="ts">
+import { onClickOutside } from '@vueuse/core'
 import { ROLES_NAMES, SELECT_ROLES } from '~/constants'
-import { useForm } from 'vee-validate'
 
 const props = defineProps<{
   name: string
 }>()
+
+const modalRef = ref()
+const { getDecodeToken } = storeToRefs(useAuthStore())
+
+onClickOutside(modalRef, (event) => toggle())
 
 const isOpen = ref(false)
 
@@ -29,7 +34,7 @@ onMounted(() => {
 watch(
   () => errorMessage.value,
   (newValue) => {
-    useNuxtApp().$toast.error('Заполни данные пользователя');
+    useNuxtApp().$toast.error('Заполни данные пользователя')
   },
 )
 </script>
@@ -43,6 +48,7 @@ watch(
       class="selector"
       :class="{ error: errorMessage }"
       @click="toggle()"
+      ref="modalRef"
     >
       <div class="label">
         <span
@@ -60,13 +66,18 @@ watch(
       />
       <div :class="{ hidden: !isOpen, isOpen }">
         <ul>
-          <li
-            :class="{ current: item.name === currentSelect }"
-            v-for="item in SELECT_ROLES"
-            @click="selectItem(item)"
+          <template
+            v-for="(item, index) in SELECT_ROLES"
+            :key="index"
           >
-            {{ item.name }}
-          </li>
+            <li
+              v-if="getDecodeToken.role < item.maxRole"
+              :class="{ current: item.name === currentSelect }"
+              @click="selectItem(item)"
+            >
+              {{ item.name }}
+            </li>
+          </template>
         </ul>
       </div>
     </div>
@@ -132,8 +143,9 @@ watch(
   }
 
   li {
+    position: relative;
     padding: 4px 8px;
-    margin: 4px 0;
+    margin: 4px;
     border-radius: $ultraSmallRadius;
     color: $textPrimary;
     &:hover {
@@ -142,13 +154,12 @@ watch(
     }
   }
   .current {
-    position: relative;
     background: #eaeaea;
 
     &:after {
       content: '';
       position: absolute;
-      right: 8px;
+      right: 15px;
       top: 50%;
       transform: translateY(-50%);
       width: 16px;

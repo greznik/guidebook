@@ -12,9 +12,13 @@ const route = useRoute()
 const isPublishActive = ref(false)
 const { width } = useWindowSize({ initialWidth: 0 })
 const treeStore = useTreeStore()
+const authStore = useAuthStore()
+const { getUserInfo } = useUsersStore()
 const { updateSeed } = useSeedsStore()
 const { updateGroup, deleteGroup } = useGroupsStore()
-const { hasEditable } = storeToRefs(useAuthStore())
+const { hasEditable } = storeToRefs(authStore)
+
+await useAsyncData('user', getUserInfo)
 
 const selectedItem = ref<any>({
   id: '',
@@ -79,15 +83,9 @@ const updateSeedName = useDebounceFn(async ($event) => {
   }
 }, 500)
 
-const deleteGroupHandle = async () => {
-  try {
-    await deleteGroup(getSidebarList.value.id)
-    await navigateTo({
-      path: '/',
-    })
-    refreshNuxtData('tree')
-  } catch (e) {}
-}
+onMounted(() => {
+  authStore.setGroupId(getSidebarList.value.id)
+})
 </script>
 
 <template>
@@ -244,7 +242,7 @@ const deleteGroupHandle = async () => {
     @media screen and (max-width: $big) {
       display: inline-block;
     }
-    
+
     @media screen and (max-width: $medium) {
       margin-top: 30px;
     }

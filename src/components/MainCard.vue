@@ -23,7 +23,7 @@ const handleCardClick = async () => {
 }
 
 const getShorterChapterList = computed(() => {
-  return props.card.chapters.slice(0, 5)
+  return props.card.chapters.slice(0, 4)
 })
 
 const getRemainingChapters = computed(() => {
@@ -148,9 +148,9 @@ const getRemainingChapters = computed(() => {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: 12px;
     flex: 1;
-    margin-top: 16px;
+    margin-top: 12px;
 
     @media screen and (max-width: $big) {
       display: none;
@@ -173,7 +173,6 @@ const getRemainingChapters = computed(() => {
       font-size: 16px;
       line-height: 24px;
       color: $textPrimary;
-      margin-top: auto;
     }
   }
 

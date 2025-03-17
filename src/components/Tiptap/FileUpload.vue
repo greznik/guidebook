@@ -63,7 +63,7 @@ onMounted(() => {
     <template v-if="!node.attrs.src">
       <input
         type="file"
-        accept="image/*"
+        multiple
         @change="handleFileUpload"
         ref="fileInput"
         class="file-upload__input"
@@ -99,6 +99,8 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .file-upload {
+  display: inline-block;
+  width: 100%;
   font-size: 16px;
   line-height: 20px;
   margin-top: 24px;

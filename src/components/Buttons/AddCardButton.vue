@@ -16,7 +16,6 @@ import PlusIcon from '~/components/Icons/PlusIcon.vue'
   border-radius: $mediumRadius;
   background-color: $cardButton;
   padding: 12px;
-  height: 312px;
   transition: background-color 0.2s ease;
 
   @media screen and (max-width: $big) {

@@ -19,24 +19,23 @@ const { createUser, deleteUser, updateUser } = useUsersStore()
 const groupFormVisible = ref<string | boolean>(false)
 const userFormVisible = ref<string | boolean>(false)
 const groupIdEdit = ref<string>('')
+const deletedUserId = ref<string>('')
 
 const { data: users } = await useAsyncData<IUsersList[]>('users', getUsersList)
 
 const schema = object().shape({
   password: string()
-    .required()
     .min(8, 'Пароль должен содержать минимум 8 символов')
     .matches(/[a-zA-Z]/, 'Допустимы только латинские буквы'),
-  name: string().required(),
-  role: number().required(),
-  login: string().required(),
+  name: string().required('Это обязательное поле'),
+  role: number().required('Это обязательное поле'),
+  login: string().required('Это обязательное поле'),
 })
 
 const user = reactive({
   name: '',
   role: {},
   login: '',
-  password: '',
 })
 
 const loading = ref(false)
@@ -73,12 +72,21 @@ const closeForm = () => {
   userFormVisible.value = false
 }
 
+const prepareToDelete = () => {}
+
 const { value, errorMessage, meta } = useField(() => 'login')
+
+onUnmounted(() => {
+  if (deletedUserId.value) {
+    deleteUser(deletedUserId.value)
+  }
+})
 </script>
 
 <template>
   <Modal
     @handleModal="emit('handleModal')"
+    disableOutside
     color="#ffffff"
     label="Сотрудники"
   >
@@ -218,11 +226,34 @@ const { value, errorMessage, meta } = useField(() => 'login')
             <div
               v-else
               class="users__info"
+              :class="{delete: deletedUserId === user.id}"
             >
               <p class="users__info-item">{{ user.name }}</p>
               <p class="users__info-item">{{ ROLES_NAMES[user.role] }}</p>
               <p class="users__info-item">{{ user.login }}</p>
-              <div class="form__buttons">
+              <p class="users__info-item"></p>
+              <div
+                class="form__buttons"
+                v-if="deletedUserId === user.id"
+              >
+                <Tooltip text="Восстановить" position="left">
+                  <ButtonComponent
+                    @click="deletedUserId = ''"
+                    class="form__button"
+                  >
+                    <template #icon>
+                      <img
+                        src="~/assets/svg/refreshUser.svg"
+                        alt="refresh"
+                      />
+                    </template>
+                  </ButtonComponent>
+                </Tooltip>
+              </div>
+              <div
+                class="form__buttons"
+                v-else
+              >
                 <ButtonComponent
                   outline
                   @click="editUserHandler(user.id, group.group_id)"
@@ -235,10 +266,10 @@ const { value, errorMessage, meta } = useField(() => 'login')
                     />
                   </template>
                 </ButtonComponent>
-                <Tooltip text="Удалить">
+                <Tooltip text="Удалить" position="left">
                   <ButtonComponent
                     outline
-                    @click="deleteUser(user.id)"
+                    @click="deletedUserId = user.id"
                     class="form__button"
                   >
                     <template #icon>
@@ -267,8 +298,14 @@ const { value, errorMessage, meta } = useField(() => 'login')
   gap: 24px;
   width: clamp(850px, 100vw, 1000px);
   height: 680px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   &__list {
     display: flex;
@@ -290,11 +327,16 @@ const { value, errorMessage, meta } = useField(() => 'login')
 
   &__info {
     display: grid;
-    grid-template-columns: repeat(4, minmax(100px, 1fr));
+    grid-template-columns: repeat(5, minmax(100px, 1fr));
     align-items: center;
     width: 100%;
     gap: 8px;
     color: $textPrimary;
+
+    &.delete .users__info-item {
+      text-decoration: line-through;
+      color: $placeholderGrey;
+    }
 
     &-item {
       grid-row: 1;

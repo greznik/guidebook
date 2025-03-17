@@ -6,12 +6,16 @@ import type { CookieRef } from '#app'
 import { ROLES } from '~/constants'
 
 interface IAuthState {
+  userInfo: IProfileUserBody | null
+  currentGroupId: string | null
   user: IDecodeUser | null
   userToken: CookieRef<string>
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): IAuthState => ({
+    userInfo: null,
+    currentGroupId: null,
     user: null,
     userToken: useCookie('token'),
   }),
@@ -19,10 +23,14 @@ export const useAuthStore = defineStore('auth', {
     getDecodeToken: (state): IDecodeUser => {
       return jwtDecode(state.userToken)
     },
+
     hasEditable: (state) => {
       if (state.userToken) {
         const user = jwtDecode<IDecodeUser>(state.userToken)
-        return user.role === ROLES.ADMINS || user.role === ROLES.MODERATORS
+        return (
+          user.role === ROLES.ADMINS ||
+          (user.role === ROLES.MODERATORS && state.userInfo?.group_id === state.currentGroupId)
+        )
       } else {
         return false
       }
@@ -42,6 +50,10 @@ export const useAuthStore = defineStore('auth', {
 
     clearAuth() {
       this.storeToken(null)
+    },
+
+    setGroupId(value: string) {
+      this.currentGroupId = value
     },
 
     async loginUser(login: string, password: string) {

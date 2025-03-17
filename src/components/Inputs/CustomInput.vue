@@ -19,10 +19,10 @@ const props = defineProps({
 const { value, errorMessage, meta } = useField(() => props.name)
 
 watch(
-  () => errorMessage.value,
+  () => meta.touched,
   (value) => {
-    if (value) {
-      useNuxtApp().$toast.error(value)
+    if (value && meta.dirty && errorMessage.value) {
+      useNuxtApp().$toast.error(errorMessage.value)
     }
   },
 )

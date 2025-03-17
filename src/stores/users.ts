@@ -6,7 +6,7 @@ export interface ICreateUserBody {
   group_id: string
   login: string
   name: string
-  password: string
+  password?: string
   role: number
 }
 
@@ -15,6 +15,8 @@ export interface IProfileUserBody {
   login: string
   name: string
   role: ROLES
+  group_id: string
+  group_name: string
 }
 
 export interface IUpdateUserBody {
@@ -123,10 +125,12 @@ export const useUsersStore = defineStore('users', {
       }
     },
     async getUserInfo() {
+      const authStore = useAuthStore()
       try {
         const result: IRequest<IProfileUserBody> = await useApiFetch()(`/users/info`, {
           method: 'GET',
         })
+        authStore.userInfo = result.body
         return result.body
       } catch (e) {}
     },

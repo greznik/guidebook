@@ -18,7 +18,7 @@ const { loginUser } = useAuthStore()
 const schema = object().shape({
   // email: string().email().required(),
   password: string()
-    .required()
+    .required('Заполните нужные поля')
     .min(8, 'Пароль должен содержать минимум 8 символов')
     .matches(/[a-zA-Z]/, 'Допустимы только латинские буквы'),
   login: string(),

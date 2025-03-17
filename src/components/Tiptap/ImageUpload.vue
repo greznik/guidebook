@@ -163,8 +163,10 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .image-upload {
+  display: inline-block;
   width: fit-content;
   margin: 24px 0;
+  margin-right: 16px;
 
   &__input {
     display: none;

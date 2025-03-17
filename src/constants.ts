@@ -20,7 +20,7 @@ export const ROLES_NAMES = {
 }
 
 export const SELECT_ROLES = [
-  { role: 1, name: 'Редактор' },
-  { role: 2, name: 'Сотрудник' },
-  { role: 3, name: 'Заказчик' },
+  { role: 1, name: 'Редактор', maxRole: 1 },
+  { role: 2, name: 'Сотрудник', maxRole: 2 },
+  { role: 3, name: 'Заказчик', maxRole: 2 },
 ]

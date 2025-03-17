@@ -51,7 +51,7 @@ const tooltipClasses = computed(() => ({
   color: #ffffff;
   text-align: center;
   padding: 8px 12px;
-  min-width: 90px;
+  min-width: 116px;
   border-radius: $ultraSmallRadius;
   background: $bgTooltip;
 
@@ -82,7 +82,7 @@ const tooltipClasses = computed(() => ({
 
 .tooltip--left {
   inset-block-start: 120%;
-  inset-inline-start: -25%;
+  inset-inline-start: -40%;
   margin-inline-start: -60px;
 }
 
@@ -101,7 +101,7 @@ const tooltipClasses = computed(() => ({
 
 .tooltip--left::after {
   inset-block-end: 100%;
-  inset-inline-start: 75%;
+  inset-inline-start: 80%;
   border-color: transparent transparent $bgTooltip transparent;
 }
 

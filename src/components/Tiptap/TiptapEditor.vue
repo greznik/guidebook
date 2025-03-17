@@ -104,11 +104,11 @@ const editor = useEditor({
     Color,
     TextStyle,
     Link,
-    Image.configure({
-      HTMLAttributes: {
-        class: 'editor-image',
-      },
-    }),
+    // Image.configure({
+    //   HTMLAttributes: {
+    //     class: 'editor-image',
+    //   },
+    // }),
     ImageUpload,
     FileUpload,
     CardUpload,

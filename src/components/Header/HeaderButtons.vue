@@ -49,7 +49,7 @@ const handlePopup = () => {
 
 const popupButtons = [
   { id: 0, name: 'Мой профиль', img: ProfileIcon, action: handleProfileModal, class: '', maxRole: 4 },
-  { id: 1, name: 'Сотрудники', img: UserPopupIcon, action: handleUsersModal, class: '', maxRole: 3 },
+  { id: 1, name: 'Сотрудники', img: UserPopupIcon, action: handleUsersModal, class: '', maxRole: 2 },
   { id: 2, name: 'Выйти', img: SignOutIcon, action: logoutUser, class: 'exit', maxRole: 4 },
 ]
 </script>
@@ -129,7 +129,7 @@ const popupButtons = [
         class="header__button"
         @click="handlePopup"
       >
-        <p class="header__button-name">{{ ROLES_NAMES[getDecodeToken?.role] }}</p>
+        <p class="header__button-name">{{ getDecodeToken?.name }}</p>
         <template #icon>
           <img
             class="header__auth-icon"

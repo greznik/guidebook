@@ -74,13 +74,6 @@ const contentTypes: ContentType[] = [
     command: () => props.editor?.chain().focus().setParagraph().run(),
   },
   {
-    name: 'heading',
-    label: 'Заголовок',
-    icon: 'mdi:format-header-1',
-    command: () => props.editor?.chain().focus().toggleHeading({ level: 1 }).run(),
-    attrs: { level: 1 },
-  },
-  {
     name: 'bulletList',
     label: 'Список',
     icon: 'material-symbols-light:format-list-bulleted',

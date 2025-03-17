@@ -10,7 +10,7 @@ export interface FileUploadAttributes {
 
 export const FileUploadNode = Node.create<never, FileUploadAttributes>({
   name: 'fileUpload',
-
+  
   group: 'block',
   selectable: true,
 

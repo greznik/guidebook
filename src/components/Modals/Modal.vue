@@ -1,15 +1,24 @@
 <script lang="ts" setup>
-defineProps<{
+const props = defineProps<{
   isSearch?: boolean
   label?: string
   color?: string
+  disableOutside?: boolean
 }>()
 
 const emit = defineEmits(['handleModal'])
 const modalRef = ref()
 const closeRef = ref()
 
-onClickOutside(modalRef, (event) => emit('handleModal'), { ignore: [closeRef] })
+onClickOutside(
+  modalRef,
+  (event) => {
+    if (!props.disableOutside) {
+      emit('handleModal')
+    }
+  },
+  { ignore: [closeRef] },
+)
 </script>
 
 <template>

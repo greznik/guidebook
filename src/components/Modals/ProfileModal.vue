@@ -50,6 +50,7 @@ const handleModal = () => {
   <Modal
     label="Мой профиль"
     color="#FFFFFF"
+    disableOutside
     @handleModal="handleModal"
   >
     <Form
@@ -58,7 +59,7 @@ const handleModal = () => {
       @submit="onSubmit"
       class="profile"
     >
-      <div class="profile__block">
+      <div class="profile__block top">
         <div class="profile__block-header">
           <p class="profile__block-title">Общая информация</p>
           <span class="profile__block-line"></span>
@@ -80,6 +81,10 @@ const handleModal = () => {
         <div class="profile__info-block">
           <span class="profile__info-label">Логин</span>
           <p class="profile__info-text">{{ userData.login }}</p>
+        </div>
+        <div class="profile__info-block" v-if="userData.group_name">
+          <span class="profile__info-label">Отдел</span>
+          <p class="profile__info-text">{{ userData.group_name }}</p>
         </div>
         <div class="profile__info-block">
           <span class="profile__info-label">Роль</span>
@@ -164,6 +169,10 @@ const handleModal = () => {
   &__block {
     margin-bottom: 24px;
 
+    &.top {
+      margin-bottom: 16px;
+    }
+
     &-header {
       display: flex;
       flex-direction: row;
@@ -193,7 +202,6 @@ const handleModal = () => {
     justify-content: space-between;
     gap: 16px;
     margin-bottom: 24px;
-    margin-top: 24px;
 
     &-block {
       width: 50%;
