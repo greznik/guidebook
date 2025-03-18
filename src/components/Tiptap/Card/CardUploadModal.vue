@@ -314,7 +314,6 @@ onMounted(() => {
     font-weight: 600;
     line-height: 20px;
     font-size: 16px;
-    max-width: 250px;
     white-space: nowrap;
     overflow: hidden !important;
     text-overflow: ellipsis;

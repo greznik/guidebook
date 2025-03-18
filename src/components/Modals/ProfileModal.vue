@@ -170,7 +170,7 @@ const handleModal = () => {
     margin-bottom: 24px;
 
     &.top {
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
 
     &-header {

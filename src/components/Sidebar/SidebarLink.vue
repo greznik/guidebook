@@ -61,7 +61,7 @@ watch(
         src="~/assets/svg/dragVerticalDots.svg"
         alt=""
       />
-      <p class="navigation__list-text">{{ item.name }}</p>
+      <p class="navigation__list-text">{{ item.name ? item.name : 'Новый подраздел' }}</p>
     </div>
     <button
       v-if="hasEditable && route.name === 'content' && card.seeds.length > 1"

@@ -120,7 +120,7 @@ watch(
 
   &::placeholder {
     color: $placeholderGrey;
-    font-size: 14px;
+    font-size: 16px;
     opacity: 1; /* Firefox */
   }
 

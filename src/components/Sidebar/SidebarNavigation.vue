@@ -144,7 +144,7 @@ const popupButtons = reactive([
     <ul
       class="navigation__list"
       v-if="sidebarList"
-      :class="{ content: route.name === 'content' }"
+      :class="{ content: route.name === 'content', isEdit: hasEditable }"
     >
       <li
         v-for="(chapter, index) in sidebarList.chapters"
@@ -260,12 +260,21 @@ const popupButtons = reactive([
 
   &__list {
     overflow-y: auto;
-    max-height: calc(100vh - 140px);
     border-top: 1px solid $navBorder;
     border-bottom: 1px solid $navBorder;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &.content.isEdit {
+      max-height: calc(100vh - 230px);
+    }
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     &.content {
-      max-height: calc(100vh - 230px);
+      max-height: calc(100vh - 170px);
     }
     &-item:not(:last-child) {
       border-bottom: 1px solid $navBorder;

@@ -9,7 +9,7 @@ const props = defineProps<{
 const modalRef = ref()
 const { getDecodeToken } = storeToRefs(useAuthStore())
 
-onClickOutside(modalRef, (event) => toggle())
+onClickOutside(modalRef, (event) => isOpen.value = false)
 
 const isOpen = ref(false)
 

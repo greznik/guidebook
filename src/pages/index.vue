@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
+import { ROLES } from '~/constants'
 import MainCard from '~/components/MainCard.vue'
 import Footer from '~/components/Footer/FooterComponent.vue'
 import Sidebar from '~/components/Sidebar/Sidebar.vue'
@@ -11,7 +12,7 @@ import AddCardButton from '~/components/Buttons/AddCardButton.vue'
 const useStore = useTreeStore()
 const { createGroup } = useGroupsStore()
 const { tree, getSidebarItems } = storeToRefs(useStore)
-const { hasEditable } = storeToRefs(useAuthStore())
+const { hasEditable, getDecodeToken } = storeToRefs(useAuthStore())
 
 const isLoading = ref(false)
 
@@ -107,7 +108,7 @@ const createGroupHandle = async () => {
         <AddCardButton
           @click="createGroupHandle"
           :disabled="isLoading"
-          v-if="hasEditable"
+          v-if="getDecodeToken.role === ROLES.ADMINS"
         />
       </section>
     </main>

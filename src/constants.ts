@@ -13,7 +13,7 @@ export enum ROLES {
 
 export const ROLES_NAMES = {
   [ROLES.ADMINS]: 'Администратор',
-  [ROLES.MODERATORS]: 'Модератор',
+  [ROLES.MODERATORS]: 'Редактор',
   [ROLES.EMPLOYEERS]: 'Сотрудник',
   [ROLES.CUSTOMERS]: 'Заказчик',
   [ROLES.GUESTS]: 'Гость',

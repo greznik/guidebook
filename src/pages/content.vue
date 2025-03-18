@@ -32,7 +32,7 @@ const selectItem = (item: any) => {
 }
 
 const onCopy = () => {
-  useNuxtApp().$toast.info('Ссылка скопирована')
+  useNuxtApp().$toast.success('Ссылка скопирована')
   if (location.value.href) {
     navigator.clipboard.writeText(location.value.href)
   }

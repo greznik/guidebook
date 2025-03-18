@@ -16,6 +16,7 @@ const { getUsersList } = useUsersStore()
 const emit = defineEmits(['handleModal'])
 
 const { createUser, deleteUser, updateUser } = useUsersStore()
+const showPassword = ref<boolean>(false)
 const groupFormVisible = ref<string | boolean>(false)
 const userFormVisible = ref<string | boolean>(false)
 const groupIdEdit = ref<string>('')
@@ -57,8 +58,8 @@ const onSubmit = getSubmitFn(schema, async (values) => {
   } else {
     await createUser(updateData)
   }
-  loading.value = false
   closeForm()
+  loading.value = false
 })
 
 const editUserHandler = (userId: string, groupId: string) => {
@@ -129,11 +130,27 @@ onUnmounted(() => {
                 name="login"
                 type="text"
               />
-              <CustomInput
-                placeholder="Пароль"
-                name="password"
-                type="password"
-              />
+              <div class="password-input">
+                <CustomInput
+                  placeholder="Пароль"
+                  name="password"
+                  :type="showPassword ? 'text' : 'password'"
+                />
+                <div class="password-icon">
+                  <img
+                    v-if="showPassword"
+                    src="~/assets/svg/passwordOpen.svg"
+                    alt="password"
+                    @click="showPassword = !showPassword"
+                  />
+                  <img
+                    v-else
+                    src="~/assets/svg/passwordClose.svg"
+                    @click="showPassword = !showPassword"
+                    alt="password"
+                  />
+                </div>
+              </div>
 
               <div class="form__buttons">
                 <ButtonComponent
@@ -226,7 +243,7 @@ onUnmounted(() => {
             <div
               v-else
               class="users__info"
-              :class="{delete: deletedUserId === user.id}"
+              :class="{ delete: deletedUserId === user.id }"
             >
               <p class="users__info-item">{{ user.name }}</p>
               <p class="users__info-item">{{ ROLES_NAMES[user.role] }}</p>
@@ -236,7 +253,10 @@ onUnmounted(() => {
                 class="form__buttons"
                 v-if="deletedUserId === user.id"
               >
-                <Tooltip text="Восстановить" position="left">
+                <Tooltip
+                  text="Восстановить"
+                  position="left"
+                >
                   <ButtonComponent
                     @click="deletedUserId = ''"
                     class="form__button"
@@ -266,20 +286,18 @@ onUnmounted(() => {
                     />
                   </template>
                 </ButtonComponent>
-                <Tooltip text="Удалить" position="left">
-                  <ButtonComponent
-                    outline
-                    @click="deletedUserId = user.id"
-                    class="form__button"
-                  >
-                    <template #icon>
-                      <img
-                        src="~/assets/svg/deleteTrash.svg"
-                        alt="delete"
-                      />
-                    </template>
-                  </ButtonComponent>
-                </Tooltip>
+                <ButtonComponent
+                  outline
+                  @click="deletedUserId = user.id"
+                  class="form__button"
+                >
+                  <template #icon>
+                    <img
+                      src="~/assets/svg/deleteTrash.svg"
+                      alt="delete"
+                    />
+                  </template>
+                </ButtonComponent>
               </div>
             </div>
           </template>
@@ -417,5 +435,16 @@ details > summary {
 
 summary::-webkit-details-marker {
   display: none;
+}
+
+.password-input {
+  position: relative;
+}
+
+.password-icon {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  cursor: pointer;
 }
 </style>
