@@ -2,7 +2,6 @@
 import { onClickOutside } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { useAuthStore } from '~/stores/auth'
-import { ROLES_NAMES } from '~/constants'
 
 import SmallPopup from '~/components/Modals/SmallPopup.vue'
 import UsersModal from '~/components/Modals/UsersModal.vue'
@@ -19,6 +18,7 @@ const isShowProfile = ref(false)
 const poppup = ref(null)
 const authButtonRef = ref()
 const route = useRoute()
+const error = useError()
 
 const emit = defineEmits(['handleModal', 'logoutUser', 'handleSearch'])
 
@@ -74,7 +74,7 @@ const popupButtons = [
 
   <div
     class="header__buttons"
-    :class="{ content: route.name === 'content' }"
+    :class="{ content: route.name === 'content' && !error?.statusCode }"
   >
     <Transition name="fade">
       <SmallPopup

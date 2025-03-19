@@ -63,8 +63,10 @@ export const useTreeStore = defineStore('tree', {
         }
         return true
       } catch (error: any) {
-        const { setError } = useAuthStore()
-        setError(error.response.status)
+        throw createError({
+          statusCode: error.response.status,
+          statusMessage: error.response._data.message,
+        })
       } finally {
         this.loading = false
       }
