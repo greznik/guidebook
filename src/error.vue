@@ -20,7 +20,18 @@ const handleError = () => {
         </HeaderComponent>
         <div class="error__block">
           <div class="error__info">
-            <p class="error__info-text">Раздел недоступен</p>
+            <p
+              class="error__info-text"
+              v-if="error?.statusCode === 404"
+            >
+              Страница не найдена
+            </p>
+            <p
+              class="error__info-text"
+              v-else
+            >
+              Раздел недоступен
+            </p>
             <ButtonComponent
               class="error__info-button"
               outline
