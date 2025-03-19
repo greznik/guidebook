@@ -108,7 +108,7 @@ const createGroupHandle = async () => {
         <AddCardButton
           @click="createGroupHandle"
           :disabled="isLoading"
-          v-if="getDecodeToken.role === ROLES.ADMINS"
+          v-if="getDecodeToken && getDecodeToken?.role === ROLES.ADMINS"
         />
       </section>
     </main>

@@ -1,4 +1,9 @@
 import { defineStore } from 'pinia'
+import type { IRequest } from '~/types/app.types'
+
+export interface IAnswerUpload {
+  url: string
+}
 
 export const useUploadStore = defineStore('upload', {
   getters: {},
@@ -8,11 +13,14 @@ export const useUploadStore = defineStore('upload', {
       formData.append('file', file)
       formData.append('sheet_id', tabId)
       try {
-        return await useApiFetch()(`/upload`, {
+        const result: IRequest<IAnswerUpload> = await useApiFetch()(`/upload`, {
           method: 'POST',
           body: formData,
         })
-      } catch (e) {
+        useNuxtApp().$toast.success(result.message)
+        return result
+      } catch (e: any) {
+        useNuxtApp().$toast.error(e.response._data.message)
         return false
       }
     },

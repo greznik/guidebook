@@ -17,7 +17,7 @@ export const useSheetsStore = defineStore('sheets', {
         if (result.body) {
           return result.body
         }
-      } catch (e) {
+      } catch (error: any) {
         return false
       }
     },

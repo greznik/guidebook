@@ -9,6 +9,7 @@ interface IAuthState {
   userInfo: IProfileUserBody | null
   currentGroupId: string | null
   user: IDecodeUser | null
+  errorCode: any
   userToken: CookieRef<string>
 }
 
@@ -17,11 +18,16 @@ export const useAuthStore = defineStore('auth', {
     userInfo: null,
     currentGroupId: null,
     user: null,
+    errorCode: null,
     userToken: useCookie('token'),
   }),
   getters: {
-    getDecodeToken: (state): IDecodeUser => {
-      return jwtDecode(state.userToken)
+    getDecodeToken: (state): IDecodeUser | Record<string, never> => {
+      if (state.userToken) {
+        return jwtDecode(state.userToken)
+      } else {
+        return {}
+      }
     },
 
     hasEditable: (state) => {
@@ -56,6 +62,10 @@ export const useAuthStore = defineStore('auth', {
       this.currentGroupId = value
     },
 
+    setError(value: string) {
+      this.errorCode = value
+    },
+
     async loginUser(login: string, password: string) {
       try {
         const response = (await useApiFetch()(`/auth/login`, {
@@ -63,14 +73,10 @@ export const useAuthStore = defineStore('auth', {
           body: { login, password },
         })) as any
 
-        if (!response.Token) {
-          throw new Error()
-        } else {
-          this.storeToken(response.Token)
-          return true
-        }
-      } catch (error) {
-        console.error('Login error:', error)
+        this.storeToken(response.Token)
+        return true
+      } catch (error: any) {
+        useNuxtApp().$toast.error(error.response._data.message)
         return false
       }
     },

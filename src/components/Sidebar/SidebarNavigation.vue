@@ -43,10 +43,8 @@ const accessModalHandle = () => {
 
 const addSeedHandle = async (chapterId: string) => {
   try {
-    const result = (await createSeed(seedName.value, chapterId)) as any
-    if (result.body) {
+    createSeed(seedName.value, chapterId).then(async (result) => {
       await refreshNuxtData('tree')
-
       await navigateTo({
         path: '/content',
         query: {
@@ -55,9 +53,13 @@ const addSeedHandle = async (chapterId: string) => {
           tab: result.body.sheet_id,
         },
       })
+    })
+    // const result = (await createSeed(seedName.value, chapterId)) as any
+    // if (result.body) {
+    //   console.log(result.body)
 
-      useNuxtApp().$toast.success('Подраздел успешно создан')
-    }
+    //   useNuxtApp().$toast.success('Подраздел успешно создан')
+    // }
   } catch (e) {
     useNuxtApp().$toast.error('Ошибка создания подраздела')
   }
@@ -261,7 +263,6 @@ const popupButtons = reactive([
   &__list {
     overflow-y: auto;
     border-top: 1px solid $navBorder;
-    border-bottom: 1px solid $navBorder;
     -ms-overflow-style: none;
     scrollbar-width: none;
 

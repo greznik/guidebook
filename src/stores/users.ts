@@ -132,7 +132,9 @@ export const useUsersStore = defineStore('users', {
         })
         authStore.userInfo = result.body
         return result.body
-      } catch (e) {}
+      } catch (e) {
+        return false
+      }
     },
   },
 })

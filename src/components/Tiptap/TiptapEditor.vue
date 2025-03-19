@@ -218,13 +218,12 @@ onMounted(() => {
 
 .tiptap ul {
   list-style: disc;
-  padding-left: 1.5rem;
-  margin: 1rem 0;
+  padding-left: 16px;
+  margin-left: 16px;
 }
 
 .tiptap ul li {
   margin-bottom: 0.5rem;
-  line-height: 1.6;
 }
 
 .tiptap ol {
@@ -239,11 +238,6 @@ onMounted(() => {
   color: #666;
   font-style: italic;
   margin: 1rem 0;
-}
-
-.tiptap ul,
-.tiptap ol {
-  margin: 1rem 0 1rem 2rem;
 }
 
 .tiptap li {

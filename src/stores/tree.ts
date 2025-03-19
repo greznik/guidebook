@@ -29,6 +29,7 @@ export const useTreeStore = defineStore('tree', {
     },
 
     async getItemsTree() {
+      const { clearAuth } = useAuthStore()
       try {
         this.loading = true
         const response = (await useApiFetch()(`/structure/tree`, {
@@ -38,6 +39,7 @@ export const useTreeStore = defineStore('tree', {
         this.tree = response.body.groups
         return true
       } catch (e) {
+        clearAuth()
         return false
       } finally {
         this.loading = false
@@ -60,8 +62,9 @@ export const useTreeStore = defineStore('tree', {
           this.content = {}
         }
         return true
-      } catch (e) {
-        return false
+      } catch (error: any) {
+        const { setError } = useAuthStore()
+        setError(error.response.status)
       } finally {
         this.loading = false
       }

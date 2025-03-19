@@ -59,15 +59,12 @@ const isChangeContent = () => {
 
 const updateGroupName = useDebounceFn(async ($event) => {
   const nameValue = $event.target.value
-  const groupId = getSidebarList.value.id
+  const groupId = getSidebarList.value?.id
   try {
     if (groupId) {
       await updateGroup(nameValue, groupId, 'name')
     }
-    await refreshNuxtData('tree')
-  } catch (e) {
-    useNuxtApp().$toast.error('Не удалось изменить имя')
-  }
+  } catch (e) {}
 }, 500)
 
 const updateSeedName = useDebounceFn(async ($event) => {
@@ -84,13 +81,14 @@ const updateSeedName = useDebounceFn(async ($event) => {
 }, 500)
 
 onMounted(() => {
-  authStore.setGroupId(getSidebarList.value.id)
+  if (getSidebarList.value) {
+    authStore.setGroupId(getSidebarList.value.id)
+  }
 })
 </script>
 
 <template>
   <section class="content">
-    <!-- ClientOnly обход ошибки гидратации -->
     <DeleteModal
       v-if="showDeleteModal"
       @handleModal="handleDeleteModal"
@@ -122,7 +120,7 @@ onMounted(() => {
                   v-model="getSidebarList.name"
                   placeholder="Новый отдел"
                   class="sidebar__header-title"
-                  @input="updateGroupName"
+                  @change="updateGroupName"
                   :readonly="!hasEditable"
                 />
                 <button
@@ -185,11 +183,6 @@ onMounted(() => {
           >
         </div>
         <div class="content-block-wrapper__buttons">
-          <!-- <ButtonComponent
-            v-if="getDecodeToken?.role === 0 || getDecodeToken?.role === 1"
-            :disabled="!isPublishActive"
-            >Опубликовать</ButtonComponent
-          > -->
           <Tooltip text="Поделиться">
             <ButtonComponent
               class="content-block__copy-button"

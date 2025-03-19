@@ -71,7 +71,7 @@ watch(
             :key="index"
           >
             <li
-              v-if="getDecodeToken.role < item.maxRole"
+              v-if="getDecodeToken?.role < item.maxRole"
               :class="{ current: item.name === currentSelect }"
               @click="selectItem(item)"
             >

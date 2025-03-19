@@ -66,9 +66,7 @@ const handleLoadCard = async () => {
       props.updateAttributes({
         imageSrc: url,
       })
-    } else {
-      useNuxtApp().$toast.error('Не удалось загрузить картинку')
-    }
+    } 
   }
   if (localFile.value) {
     const result = (await uploadFile(localFile.value, route.query.tab as string)) as any
@@ -78,8 +76,6 @@ const handleLoadCard = async () => {
       props.updateAttributes({
         fileSrc: url,
       })
-    } else {
-      useNuxtApp().$toast.error('Не удалось загрузить файл')
     }
   }
 

@@ -40,7 +40,6 @@ const handleSubmit = async (values: any) => {
     useNuxtApp().$toast.success('Успешная авторизация')
     handleModal()
   } catch (e) {
-    useNuxtApp().$toast.error('Пользователь не найден')
   } finally {
     loading.value = false
   }
