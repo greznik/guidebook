@@ -10,7 +10,7 @@ interface IAuthState {
   currentGroupId: string | null
   user: IDecodeUser | null
   errorCode: any
-  userToken: CookieRef<string>
+  userToken: CookieRef<string> | null
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
     currentGroupId: null,
     user: null,
     errorCode: null,
-    userToken: useCookie('token'),
+    userToken: null,
   }),
   getters: {
     getDecodeToken: (state): IDecodeUser | Record<string, never> => {
@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
         httpOnly: true,
       })
       newCookie.value = this.userToken
-      // refreshCookie('token')
+      refreshCookie('token')
     },
 
     clearAuth() {

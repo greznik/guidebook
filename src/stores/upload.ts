@@ -17,7 +17,6 @@ export const useUploadStore = defineStore('upload', {
           method: 'POST',
           body: formData,
         })
-        useNuxtApp().$toast.success(result.message)
         return result
       } catch (e: any) {
         useNuxtApp().$toast.error(e.response._data.message)

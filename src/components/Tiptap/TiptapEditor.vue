@@ -220,6 +220,7 @@ onMounted(() => {
   list-style: disc;
   padding-left: 16px;
   margin-left: 16px;
+  color: $textSecondary;
 }
 
 .tiptap ul li {
@@ -228,8 +229,9 @@ onMounted(() => {
 
 .tiptap ol {
   list-style: decimal;
-  padding-left: 1.5rem;
-  margin: 1rem 0;
+  padding-left: 16px;
+  margin-left: 16px;
+  color: $textSecondary;
 }
 
 .tiptap blockquote {

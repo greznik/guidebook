@@ -7,7 +7,6 @@ import DeleteModal from '~/components/Modals/DeleteModal.vue'
 import Sidebar from '~/components/Sidebar/Sidebar.vue'
 import EditorViewer from '~/components/EditorViewer.vue'
 
-const location = useBrowserLocation()
 const route = useRoute()
 const isPublishActive = ref(false)
 const { width } = useWindowSize({ initialWidth: 0 })
@@ -31,10 +30,11 @@ const selectItem = (item: any) => {
   selectedItem.value = item
 }
 
-const onCopy = () => {
-  useNuxtApp().$toast.success('Ссылка скопирована')
+const onCopy = async () => {
+  const location = useBrowserLocation()
   if (location.value.href) {
-    navigator.clipboard.writeText(location.value.href)
+    await navigator.clipboard.writeText(location.value.href)
+    useNuxtApp().$toast.success('Ссылка скопирована')
   }
 }
 

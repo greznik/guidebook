@@ -27,7 +27,7 @@ const schema = object().shape({
 })
 
 const initialValues = {
-  name: userData.value?.name,
+  name: userData.value ? userData.value?.name : '',
 }
 
 const onSubmit = getSubmitFn(schema, async (values) => {
@@ -82,7 +82,10 @@ const handleModal = () => {
           <span class="profile__info-label">Логин</span>
           <p class="profile__info-text">{{ userData.login }}</p>
         </div>
-        <div class="profile__info-block" v-if="userData.group_name">
+        <div
+          class="profile__info-block"
+          v-if="userData.group_name"
+        >
           <span class="profile__info-label">Отдел</span>
           <p class="profile__info-text">{{ userData.group_name }}</p>
         </div>

@@ -62,11 +62,7 @@ export const useTreeStore = defineStore('tree', {
           this.content = {}
         }
         return true
-      } catch (error: any) {
-        throw createError({
-          statusCode: error.response.status,
-          statusMessage: error.response._data.message,
-        })
+      } catch (e) {
       } finally {
         this.loading = false
       }

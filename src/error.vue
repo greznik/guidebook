@@ -95,6 +95,7 @@ const handleError = () => {
 
     &-button {
       width: auto;
+      font-size: 16px;
     }
   }
 }

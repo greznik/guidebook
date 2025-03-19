@@ -216,7 +216,6 @@ const popupButtons = reactive([
         </details>
       </li>
     </ul>
-
     <ButtonComponent
       v-if="hasEditable"
       class="navigation__button"
@@ -253,8 +252,7 @@ const popupButtons = reactive([
   }
 
   &__button {
-    margin-bottom: 16px;
-    margin-top: auto;
+    margin-bottom: 170px;
     font-family: 'Inter';
     font-size: 16px;
     line-height: 20px;
