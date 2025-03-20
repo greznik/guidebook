@@ -11,7 +11,7 @@ import SignOutIcon from '~/assets/svg/signOutIcon.svg'
 import UserPopupIcon from '~/assets/svg/usersPopup.svg'
 import ProfileIcon from '~/assets/svg/profileButton.svg'
 
-const { userToken, getDecodeToken } = storeToRefs(useAuthStore())
+const { userToken, userData } = storeToRefs(useAuthStore())
 const isShowPoppup = ref(false)
 const isShowUsers = ref(false)
 const isShowProfile = ref(false)
@@ -86,7 +86,7 @@ const popupButtons = [
           :key="button.id"
         >
           <button
-            v-if="getDecodeToken.role < button.maxRole"
+            v-if="userData.role < button.maxRole"
             class="header__auth-button"
             @click="button.action"
             :class="button.class"
@@ -129,7 +129,7 @@ const popupButtons = [
         class="header__button"
         @click="handlePopup"
       >
-        <p class="header__button-name">{{ getDecodeToken?.name }}</p>
+        <p class="header__button-name">{{ userData?.name }}</p>
         <template #icon>
           <img
             class="header__auth-icon"

@@ -35,7 +35,9 @@ const handleSubmit = async (values: any) => {
   try {
     const result = await loginUser(values.login, values.password)
     if (!result) throw new Error()
-
+    await navigateTo({
+      path: '/',
+    })
     await refreshNuxtData('tree')
     useNuxtApp().$toast.success('Успешная авторизация')
     handleModal()

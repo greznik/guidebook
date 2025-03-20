@@ -37,7 +37,6 @@ watch(
   grid-area: content;
   background-color: $bgGrey;
   padding: 40px;
-  height: 100vh;
   font-size: 18px;
   overflow-y: auto;
 

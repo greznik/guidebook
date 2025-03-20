@@ -8,28 +8,20 @@ import { ROLES } from '~/constants'
 interface IAuthState {
   userInfo: IProfileUserBody | null
   currentGroupId: string | null
-  user: IDecodeUser | null
+  userData: IDecodeUser | any
   errorCode: any
-  userToken: CookieRef<string> | null
+  userToken: CookieRef<string>
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): IAuthState => ({
     userInfo: null,
     currentGroupId: null,
-    user: null,
+    userData: {},
     errorCode: null,
-    userToken: null,
+    userToken: useCookie('token'),
   }),
   getters: {
-    getDecodeToken: (state): IDecodeUser | Record<string, never> => {
-      if (state.userToken) {
-        return jwtDecode(state.userToken)
-      } else {
-        return {}
-      }
-    },
-
     hasEditable: (state) => {
       if (state.userToken) {
         const user = jwtDecode<IDecodeUser>(state.userToken)
@@ -46,11 +38,17 @@ export const useAuthStore = defineStore('auth', {
     storeToken(token: any) {
       this.userToken = token
       const newCookie = useCookie('token', {
-        maxAge: 60 * 60 * 24, // 1 day
+        maxAge: 60 * 60 * 48, // 2 day
         secure: true,
         httpOnly: true,
       })
       newCookie.value = this.userToken
+
+      if (this.userToken) {
+        this.userData = jwtDecode(this.userToken)
+      } else {
+        this.userData = null
+      }
       refreshCookie('token')
     },
 

@@ -7,7 +7,7 @@ const props = defineProps<{
 }>()
 
 const modalRef = ref()
-const { getDecodeToken } = storeToRefs(useAuthStore())
+const { userData } = storeToRefs(useAuthStore())
 
 onClickOutside(modalRef, (event) => isOpen.value = false)
 
@@ -71,7 +71,7 @@ watch(
             :key="index"
           >
             <li
-              v-if="getDecodeToken?.role < item.maxRole"
+              v-if="userData?.role < item.maxRole"
               :class="{ current: item.name === currentSelect }"
               @click="selectItem(item)"
             >

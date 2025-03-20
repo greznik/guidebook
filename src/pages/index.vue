@@ -12,7 +12,7 @@ import AddCardButton from '~/components/Buttons/AddCardButton.vue'
 const useStore = useTreeStore()
 const { createGroup } = useGroupsStore()
 const { tree, getSidebarItems } = storeToRefs(useStore)
-const { hasEditable, getDecodeToken } = storeToRefs(useAuthStore())
+const { hasEditable, userData } = storeToRefs(useAuthStore())
 
 const isLoading = ref(false)
 
@@ -108,7 +108,7 @@ const createGroupHandle = async () => {
         <AddCardButton
           @click="createGroupHandle"
           :disabled="isLoading"
-          v-if="getDecodeToken && getDecodeToken?.role === ROLES.ADMINS"
+          v-if="userData && userData?.role === ROLES.ADMINS"
         />
       </section>
     </main>
